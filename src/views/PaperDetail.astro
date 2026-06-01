@@ -2,7 +2,7 @@
 import { render, type CollectionEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
-import { localizedPath } from '../i18n/utils';
+import { localizedPath, withBase } from '../i18n/utils';
 import { formatDate } from '../lib/content';
 
 interface Props {
@@ -32,7 +32,7 @@ const d = entry.data;
         {
           d.pdf && (
             <a
-              href={d.pdf}
+              href={withBase(d.pdf)}
               target="_blank"
               rel="noopener noreferrer"
               class="rounded-md bg-ink px-3 py-1.5 text-paper transition hover:bg-accent"

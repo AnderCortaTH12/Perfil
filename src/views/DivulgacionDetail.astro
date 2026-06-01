@@ -2,7 +2,7 @@
 import { render, type CollectionEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
-import { localizedPath } from '../i18n/utils';
+import { localizedPath, withBase } from '../i18n/utils';
 import { formatDate } from '../lib/content';
 
 interface Props {
@@ -40,7 +40,7 @@ const d = entry.data;
     {
       d.imagen && (
         <img
-          src={d.imagen}
+          src={withBase(d.imagen)}
           alt={d.titulo}
           class="mb-8 w-full rounded-lg border border-line"
         />

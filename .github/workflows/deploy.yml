@@ -1,0 +1,44 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Despliega al hacer push a la rama main.
+  push:
+    branches: [main]
+  # Permite lanzarlo manualmente desde la pestaña Actions.
+  workflow_dispatch:
+
+# Permisos necesarios para publicar en GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite un único despliegue concurrente.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install, build, and upload your site
+        uses: withastro/action@v3
+        # Opciones por defecto válidas para este proyecto:
+        # with:
+        #   path: .                # raíz del repo
+        #   node-version: 20
+        #   package-manager: npm
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
