@@ -110,13 +110,13 @@ const t = useTranslations(lang);
 
     const { data, error } = await supabase
       .from(BOOSTS_TABLE)
-      .select('slug')
-      .eq('section', section);
+      .select('item_slug')
+      .eq('seccion', section);
 
     const counts: Counts = {};
     if (!error && data) {
-      for (const row of data as { slug: string }[]) {
-        counts[row.slug] = (counts[row.slug] ?? 0) + 1;
+      for (const row of data as { item_slug: string }[]) {
+        counts[row.item_slug] = (counts[row.item_slug] ?? 0) + 1;
       }
     }
 
@@ -140,7 +140,7 @@ const t = useTranslations(lang);
           countEl.textContent = String(current + 1);
         }
         btn.classList.add('text-accent', 'border-accent');
-        await supabase.from(BOOSTS_TABLE).insert({ slug, section });
+        await supabase.from(BOOSTS_TABLE).insert({ item_slug: slug, seccion: section });
         loadAndRender();
       });
     });
