@@ -5,7 +5,7 @@ import BoostButton from '../components/BoostButton.astro';
 import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
-import { getItems, formatDate } from '../lib/content';
+import { getItems, formatDate, isNew } from '../lib/content';
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
@@ -32,7 +32,14 @@ const items = await getItems('divulgacion', lang);
               data-title={a.data.titulo}
             >
               <a href={localizedPath('/divulgacion/' + a.data.slug, lang)} class="group block">
-                <p class="text-sm text-muted">{formatDate(a.data.fecha, lang)}</p>
+                <p class="flex items-center gap-2 text-sm text-muted">
+                  {formatDate(a.data.fecha, lang)}
+                  {isNew(a.data.fecha) && (
+                    <span class="rounded-full bg-ink px-2 py-0.5 text-xs font-medium text-paper">
+                      {t('card.new')}
+                    </span>
+                  )}
+                </p>
                 <h2 class="mt-1 font-serif text-2xl leading-snug transition group-hover:text-accent">
                   {a.data.titulo}
                 </h2>

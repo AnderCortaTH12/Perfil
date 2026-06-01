@@ -72,6 +72,14 @@ export async function getFeed(lang: Lang, limit = 6): Promise<FeedItem[]> {
   return all.slice(0, limit);
 }
 
+/** ¿La fecha está dentro de los últimos `months` meses? (para el badge "Nuevo"). */
+export function isNew(date: Date | undefined, months = 1): boolean {
+  if (!date) return false;
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - months);
+  return date.getTime() >= cutoff.getTime();
+}
+
 /** Formatea una fecha según el idioma. */
 export function formatDate(date: Date | undefined, lang: Lang): string {
   if (!date) return '';

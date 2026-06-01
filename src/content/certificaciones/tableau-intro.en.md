@@ -4,6 +4,7 @@ idioma: "en"
 titulo: "Introduction to Tableau"
 emisor: "DataCamp"
 fecha: 2026-02-06
+categoria: "Datos"
 logo: ""
 enlace_verificacion: ""
 credencial_id: "45891778"

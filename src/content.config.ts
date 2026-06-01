@@ -93,9 +93,11 @@ const certificaciones = defineCollection({
     titulo: z.string(),
     emisor: z.string(),
     fecha: z.date(),
+    categoria: z.string().optional(),
     logo: z.string().optional(),
     enlace_verificacion: z.string().optional(),
     credencial_id: z.string().optional(),
+    pdf: z.string().optional(),
   }),
 });
 

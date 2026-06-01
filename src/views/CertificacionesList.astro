@@ -5,7 +5,7 @@ import BoostButton from '../components/BoostButton.astro';
 import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 import { withBase } from '../i18n/utils';
-import { getItems, formatDate } from '../lib/content';
+import { getItems, formatDate, isNew } from '../lib/content';
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
@@ -39,7 +39,21 @@ const items = await getItems('certificaciones', lang);
                 />
               )}
               <div class="min-w-0 flex-1">
-                <h2 class="font-serif text-lg leading-snug">{c.data.titulo}</h2>
+                <div class="flex items-start justify-between gap-2">
+                  <h2 class="font-serif text-lg leading-snug">{c.data.titulo}</h2>
+                  <div class="flex shrink-0 flex-col items-end gap-1">
+                    {c.data.categoria && (
+                      <span class="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">
+                        {c.data.categoria}
+                      </span>
+                    )}
+                    {isNew(c.data.fecha) && (
+                      <span class="rounded-full bg-ink px-2.5 py-0.5 text-xs font-medium text-paper">
+                        {t('card.new')}
+                      </span>
+                    )}
+                  </div>
+                </div>
                 <p class="text-sm text-muted">{c.data.emisor}</p>
                 <p class="text-xs text-muted">{formatDate(c.data.fecha, lang)}</p>
                 <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">

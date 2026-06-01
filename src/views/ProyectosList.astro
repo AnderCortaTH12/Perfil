@@ -6,7 +6,7 @@ import BoostButton from '../components/BoostButton.astro';
 import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
-import { getItems } from '../lib/content';
+import { getItems, isNew } from '../lib/content';
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
@@ -35,7 +35,13 @@ const items = await getItems('proyectos-ia', lang);
               <Card
                 title={p.data.titulo}
                 href={localizedPath('/proyectos-ia/' + p.data.slug, lang)}
-                badge={p.data.destacado ? t('card.featured') : undefined}
+                badge={
+                  p.data.destacado
+                    ? t('card.featured')
+                    : isNew(p.data.fecha)
+                      ? t('card.new')
+                      : undefined
+                }
               >
                 <p>{p.data.resumen}</p>
                 {p.data.stack.length > 0 && (
