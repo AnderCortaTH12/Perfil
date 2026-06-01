@@ -12,6 +12,10 @@ export function withBase(path: string): string {
     return path;
   }
   const clean = '/' + path.replace(/^\/+/, '');
+  // Idempotente: si la ruta ya empieza por el base, no lo duplicamos.
+  if (BASE_NO_SLASH && (clean === BASE_NO_SLASH || clean.startsWith(BASE_NO_SLASH + '/'))) {
+    return clean;
+  }
   return clean === '/' ? BASE_NO_SLASH + '/' : BASE_NO_SLASH + clean;
 }
 
