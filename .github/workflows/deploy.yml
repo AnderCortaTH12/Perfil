@@ -31,6 +31,11 @@ jobs:
           node-version: 24
           # path: .                # raíz del repo
           # package-manager: npm
+        env:
+          # Claves públicas de Supabase, necesarias en el build (se inyectan en
+          # el cliente). Son PUBLIC_*, no secretas.
+          PUBLIC_SUPABASE_URL: https://bembimdeybjcozqdlcsq.supabase.co
+          PUBLIC_SUPABASE_ANON_KEY: sb_publishable_-L90AVddIKgZ03_PcRHXVw_7_GpogBk
 
   deploy:
     needs: build

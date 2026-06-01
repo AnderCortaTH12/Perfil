@@ -1,0 +1,22 @@
+---
+import { useTranslations, type Lang, type Section } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  section: Section;
+  narrow?: boolean;
+}
+
+const { lang, section, narrow = false } = Astro.props;
+const t = useTranslations(lang);
+const width = narrow ? 'max-w-3xl' : 'max-w-5xl';
+---
+
+<!-- Se rellena en cliente con los 3 elementos más votados (ver BoostButton). -->
+<div
+  data-top-boosts
+  data-section={section}
+  data-label={t('top.title')}
+  class:list={['mx-auto hidden px-6 pb-8', width]}
+>
+</div>

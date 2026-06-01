@@ -1,0 +1,129 @@
+---
+import { useTranslations, type Lang, type UIKey } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import { formatDate, type FeedItem } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  items: FeedItem[];
+}
+
+const { lang, items } = Astro.props;
+const t = useTranslations(lang);
+
+// Las certificaciones no tienen página de detalle: enlazan a su sección.
+function hrefFor(it: FeedItem): string {
+  if (it.section === 'certificaciones') return localizedPath('/certificaciones', lang);
+  return localizedPath('/' + it.section + '/' + it.slug, lang);
+}
+---
+
+{
+  items.length > 0 && (
+    <section class="mx-auto max-w-5xl px-6 pb-16">
+      <div class="mb-6 flex items-end justify-between gap-4">
+        <div>
+          <h2 class="font-serif text-2xl">{t('home.latest')}</h2>
+          <p class="mt-1 text-sm text-muted">{t('home.latest.desc')}</p>
+        </div>
+        <div class="flex shrink-0 gap-2">
+          <button
+            type="button"
+            data-carousel-prev
+            aria-label={t('carousel.prev')}
+            class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-muted transition hover:border-accent hover:text-accent"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            data-carousel-next
+            aria-label={t('carousel.next')}
+            class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-muted transition hover:border-accent hover:text-accent"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <div
+        data-carousel-track
+        class="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((it) => (
+          <a
+            href={hrefFor(it)}
+            class="group flex shrink-0 basis-[85%] snap-start flex-col rounded-xl border border-line bg-white/50 p-6 transition hover:-translate-y-0.5 hover:border-accent hover:shadow-sm sm:basis-[47%] lg:basis-[31%]"
+          >
+            <div class="mb-2 text-xs uppercase tracking-wider text-accent">
+              {t(`section.${it.section}` as UIKey)}
+            </div>
+            <h3 class="font-serif text-lg leading-snug transition group-hover:text-accent">
+              {it.titulo}
+            </h3>
+            {it.fecha && <p class="mt-1 text-xs text-muted">{formatDate(it.fecha, lang)}</p>}
+            {it.resumen && (
+              <p class="mt-3 line-clamp-3 text-sm leading-relaxed text-muted">{it.resumen}</p>
+            )}
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<script>
+  function wireCarousels() {
+    document
+      .querySelectorAll<HTMLElement>('[data-carousel-track]')
+      .forEach((track) => {
+        if (track.dataset.wired) return;
+        track.dataset.wired = 'true';
+
+        const root = track.closest('section');
+        const prev = root?.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+        const next = root?.querySelector<HTMLButtonElement>('[data-carousel-next]');
+
+        const step = () => Math.round(track.clientWidth * 0.8);
+        const atEnd = () =>
+          track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+
+        prev?.addEventListener('click', () => {
+          track.scrollBy({ left: -step(), behavior: 'smooth' });
+        });
+        next?.addEventListener('click', () => {
+          track.scrollBy({ left: step(), behavior: 'smooth' });
+        });
+
+        // Auto-avance: vuelve al inicio al llegar al final. Se pausa al pasar
+        // el ratón o al enfocar/tocar el carrusel.
+        let paused = false;
+        const pause = () => (paused = true);
+        const resume = () => (paused = false);
+        track.addEventListener('mouseenter', pause);
+        track.addEventListener('mouseleave', resume);
+        track.addEventListener('focusin', pause);
+        track.addEventListener('focusout', resume);
+        track.addEventListener('touchstart', pause, { passive: true });
+
+        const timer = window.setInterval(() => {
+          if (paused) return;
+          if (atEnd()) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            track.scrollBy({ left: step(), behavior: 'smooth' });
+          }
+        }, 5000);
+
+        // Limpia el temporizador al navegar con el router de vistas.
+        document.addEventListener(
+          'astro:before-swap',
+          () => window.clearInterval(timer),
+          { once: true }
+        );
+      });
+  }
+
+  wireCarousels();
+  document.addEventListener('astro:page-load', wireCarousels);
+</script>

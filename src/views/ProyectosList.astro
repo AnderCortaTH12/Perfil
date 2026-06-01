@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Card from '../components/Card.astro';
+import BoostButton from '../components/BoostButton.astro';
+import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
 import { getItems } from '../lib/content';
@@ -14,6 +16,8 @@ const items = await getItems('proyectos-ia', lang);
 <Layout lang={lang} title={t('section.proyectos-ia')} description={t('desc.proyectos-ia')}>
   <PageIntro title={t('section.proyectos-ia')} description={t('desc.proyectos-ia')} />
 
+  <TopBoosts lang={lang} section="proyectos-ia" />
+
   <section class="mx-auto max-w-5xl px-6 pb-16">
     {
       items.length === 0 ? (
@@ -21,22 +25,33 @@ const items = await getItems('proyectos-ia', lang);
       ) : (
         <div class="grid gap-5 md:grid-cols-2">
           {items.map((p) => (
-            <Card
-              title={p.data.titulo}
-              href={localizedPath('/proyectos-ia/' + p.data.slug, lang)}
-              badge={p.data.destacado ? t('card.featured') : undefined}
+            <div
+              class="relative flex flex-col"
+              data-boost-card
+              data-slug={p.data.slug}
+              data-section="proyectos-ia"
+              data-title={p.data.titulo}
             >
-              <p>{p.data.resumen}</p>
-              {p.data.stack.length > 0 && (
-                <ul class="mt-4 flex flex-wrap gap-1.5" slot="footer">
-                  {p.data.stack.map((tech) => (
-                    <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">
-                      {tech}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </Card>
+              <Card
+                title={p.data.titulo}
+                href={localizedPath('/proyectos-ia/' + p.data.slug, lang)}
+                badge={p.data.destacado ? t('card.featured') : undefined}
+              >
+                <p>{p.data.resumen}</p>
+                {p.data.stack.length > 0 && (
+                  <ul class="mt-4 flex flex-wrap gap-1.5" slot="footer">
+                    {p.data.stack.map((tech) => (
+                      <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">
+                        {tech}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
+              <div class="mt-2 flex justify-end">
+                <BoostButton lang={lang} slug={p.data.slug} section="proyectos-ia" />
+              </div>
+            </div>
           ))}
         </div>
       )

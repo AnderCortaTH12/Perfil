@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageIntro from '../components/PageIntro.astro';
+import BoostButton from '../components/BoostButton.astro';
+import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
 import { getItems, formatDate } from '../lib/content';
@@ -13,6 +15,8 @@ const items = await getItems('divulgacion', lang);
 <Layout lang={lang} title={t('section.divulgacion')} description={t('desc.divulgacion')}>
   <PageIntro title={t('section.divulgacion')} description={t('desc.divulgacion')} />
 
+  <TopBoosts lang={lang} section="divulgacion" narrow />
+
   <section class="mx-auto max-w-3xl px-6 pb-16">
     {
       items.length === 0 ? (
@@ -20,7 +24,13 @@ const items = await getItems('divulgacion', lang);
       ) : (
         <ul class="divide-y divide-line">
           {items.map((a) => (
-            <li class="py-7 first:pt-0">
+            <li
+              class="relative py-7 first:pt-0"
+              data-boost-card
+              data-slug={a.data.slug}
+              data-section="divulgacion"
+              data-title={a.data.titulo}
+            >
               <a href={localizedPath('/divulgacion/' + a.data.slug, lang)} class="group block">
                 <p class="text-sm text-muted">{formatDate(a.data.fecha, lang)}</p>
                 <h2 class="mt-1 font-serif text-2xl leading-snug transition group-hover:text-accent">
@@ -37,6 +47,9 @@ const items = await getItems('divulgacion', lang);
                   </ul>
                 )}
               </a>
+              <div class="mt-3 flex justify-end">
+                <BoostButton lang={lang} slug={a.data.slug} section="divulgacion" />
+              </div>
             </li>
           ))}
         </ul>

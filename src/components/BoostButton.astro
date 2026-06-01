@@ -1,0 +1,176 @@
+---
+import { useTranslations, type Lang, type Section } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+  section: Section;
+}
+
+const { lang, slug, section } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<button
+  type="button"
+  class="boost-btn inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1 text-sm text-muted transition hover:border-accent hover:text-accent"
+  data-slug={slug}
+  data-section={section}
+  title={t('boost.title')}
+  aria-label={t('boost.label')}
+>
+  <span aria-hidden="true">▲</span>
+  <span class="boost-count tabular-nums">·</span>
+</button>
+
+<script>
+  import { supabase, BOOSTS_TABLE } from '../lib/supabase';
+
+  type Counts = Record<string, number>;
+  let channel: ReturnType<typeof supabase.channel> | null = null;
+
+  function applyCounts(counts: Counts) {
+    document.querySelectorAll<HTMLElement>('.boost-btn').forEach((btn) => {
+      const slug = btn.dataset.slug ?? '';
+      const countEl = btn.querySelector<HTMLElement>('.boost-count');
+      if (countEl) countEl.textContent = String(counts[slug] ?? 0);
+    });
+  }
+
+  function renderTop(cards: HTMLElement[], counts: Counts, section: string) {
+    const ranked = cards
+      .map((card) => ({
+        card,
+        slug: card.dataset.slug ?? '',
+        title: card.dataset.title ?? '',
+        n: counts[card.dataset.slug ?? ''] ?? 0,
+      }))
+      .filter((x) => x.n > 0)
+      .sort((a, b) => b.n - a.n)
+      .slice(0, 3);
+
+    const topSlugs = new Set(ranked.map((r) => r.slug));
+
+    // Corona 👑 en las tarjetas del top 3.
+    cards.forEach((card) => {
+      const existing = card.querySelector('.boost-crown');
+      if (topSlugs.has(card.dataset.slug ?? '')) {
+        if (!existing) {
+          const crown = document.createElement('span');
+          crown.className =
+            'boost-crown pointer-events-none absolute -left-2 -top-2 z-10 rounded-full border border-line bg-paper px-1.5 py-0.5 text-sm shadow-sm';
+          crown.textContent = '👑';
+          card.appendChild(crown);
+        }
+      } else if (existing) {
+        existing.remove();
+      }
+    });
+
+    // Franja "Lo más valorado" en la parte superior de la sección.
+    const strip = document.querySelector<HTMLElement>(
+      `[data-top-boosts][data-section="${section}"]`
+    );
+    if (!strip) return;
+
+    strip.innerHTML = '';
+    if (ranked.length === 0) {
+      strip.classList.add('hidden');
+      return;
+    }
+    strip.classList.remove('hidden');
+
+    const heading = document.createElement('h2');
+    heading.className = 'mb-3 text-xs font-medium uppercase tracking-wider text-accent';
+    heading.textContent = strip.dataset.label ?? 'Top';
+    strip.appendChild(heading);
+
+    const list = document.createElement('ul');
+    list.className = 'flex flex-wrap gap-2';
+    ranked.forEach((r) => {
+      const li = document.createElement('li');
+      li.className =
+        'inline-flex items-center gap-2 rounded-full border border-line bg-white/50 px-3 py-1 text-sm';
+      const title = document.createElement('span');
+      title.textContent = '👑 ' + r.title;
+      const count = document.createElement('span');
+      count.className = 'tabular-nums text-muted';
+      count.textContent = r.n + ' ▲';
+      li.appendChild(title);
+      li.appendChild(count);
+      list.appendChild(li);
+    });
+    strip.appendChild(list);
+  }
+
+  async function loadAndRender() {
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-boost-card]'));
+    if (cards.length === 0) return;
+    const section = cards[0].dataset.section ?? '';
+
+    const { data, error } = await supabase
+      .from(BOOSTS_TABLE)
+      .select('slug')
+      .eq('section', section);
+
+    const counts: Counts = {};
+    if (!error && data) {
+      for (const row of data as { slug: string }[]) {
+        counts[row.slug] = (counts[row.slug] ?? 0) + 1;
+      }
+    }
+
+    applyCounts(counts);
+    renderTop(cards, counts, section);
+  }
+
+  function wireClicks() {
+    document.querySelectorAll<HTMLButtonElement>('.boost-btn').forEach((btn) => {
+      if (btn.dataset.wired) return;
+      btn.dataset.wired = 'true';
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const slug = btn.dataset.slug ?? '';
+        const section = btn.dataset.section ?? '';
+        // Incremento optimista para feedback inmediato.
+        const countEl = btn.querySelector<HTMLElement>('.boost-count');
+        if (countEl) {
+          const current = parseInt(countEl.textContent ?? '0', 10) || 0;
+          countEl.textContent = String(current + 1);
+        }
+        btn.classList.add('text-accent', 'border-accent');
+        await supabase.from(BOOSTS_TABLE).insert({ slug, section });
+        loadAndRender();
+      });
+    });
+  }
+
+  function subscribe() {
+    if (channel) supabase.removeChannel(channel);
+    channel = supabase
+      .channel('boosts-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: BOOSTS_TABLE },
+        () => loadAndRender()
+      )
+      .subscribe();
+  }
+
+  function init() {
+    if (document.querySelectorAll('[data-boost-card]').length === 0) return;
+    wireClicks();
+    loadAndRender();
+    subscribe();
+  }
+
+  init();
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => {
+    if (channel) {
+      supabase.removeChannel(channel);
+      channel = null;
+    }
+  });
+</script>

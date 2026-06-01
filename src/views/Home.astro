@@ -1,20 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Carousel from '../components/Carousel.astro';
 import { useTranslations, sections, type Lang, type UIKey } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
+import { getFeed } from '../lib/content';
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
+const feed = await getFeed(lang, 6);
 ---
 
 <Layout lang={lang}>
   <section class="mx-auto max-w-5xl px-6 pt-24 pb-16 sm:pt-32">
     <p class="text-sm uppercase tracking-[0.2em] text-accent">{t('site.role')}</p>
-    <h1 class="mt-4 font-serif text-5xl leading-tight tracking-tight sm:text-6xl">
-      {t('site.name')}
-    </h1>
+    <h1 class="mt-4 font-serif text-6xl leading-none tracking-tight sm:text-7xl">Ander Corta</h1>
     <p class="mt-6 max-w-2xl text-xl leading-relaxed text-muted">{t('site.tagline')}</p>
   </section>
+
+  <Carousel lang={lang} items={feed} />
 
   <section class="mx-auto max-w-5xl px-6 pb-16">
     <h2 class="mb-8 font-serif text-2xl">{t('home.explore')}</h2>
