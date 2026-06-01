@@ -3,18 +3,50 @@ import Layout from '../layouts/Layout.astro';
 import Carousel from '../components/Carousel.astro';
 import { useTranslations, sections, type Lang, type UIKey } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
-import { getFeed } from '../lib/content';
+import { getFeed, getItems } from '../lib/content';
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 const feed = await getFeed(lang, 6);
+
+// Estadísticas: nº de elementos por sección (solo las que tienen contenido).
+const counts = await Promise.all(
+  sections.map(async (s) => ({ section: s, n: (await getItems(s, lang)).length }))
+);
+const stats = counts.filter((c) => c.n > 0);
 ---
 
 <Layout lang={lang}>
   <section class="mx-auto max-w-5xl px-6 pt-24 pb-16 sm:pt-32">
-    <p class="text-sm uppercase tracking-[0.2em] text-accent">{t('site.role')}</p>
-    <h1 class="mt-4 font-serif text-6xl leading-none tracking-tight sm:text-7xl">Ander Corta</h1>
-    <p class="mt-6 max-w-2xl text-xl leading-relaxed text-muted">{t('site.tagline')}</p>
+    <p class="animate-fade-up text-sm uppercase tracking-[0.2em] text-accent">{t('site.role')}</p>
+    <h1
+      class="animate-fade-up mt-4 font-serif text-6xl leading-none tracking-tight sm:text-7xl"
+      style="animation-delay: 0.08s"
+    >
+      Ander Corta
+    </h1>
+    <p
+      class="animate-fade-up mt-6 max-w-2xl text-xl leading-relaxed text-muted"
+      style="animation-delay: 0.16s"
+    >
+      {t('site.tagline')}
+    </p>
+
+    {
+      stats.length > 0 && (
+        <dl
+          class="animate-fade-up mt-10 flex flex-wrap gap-x-10 gap-y-4"
+          style="animation-delay: 0.24s"
+        >
+          {stats.map((s) => (
+            <div>
+              <dt class="font-serif text-3xl text-accent">{s.n}</dt>
+              <dd class="text-sm text-muted">{t(`section.${s.section}` as UIKey)}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
   </section>
 
   <Carousel lang={lang} items={feed} />
