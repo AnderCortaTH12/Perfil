@@ -7,5 +7,5 @@ abstract: "Trabajo de Fin de Grado (Ingeniería en Organización Industrial, Tec
 autores: ["Ander Corta Arrieta"]
 publicacion: "Tecnun - Universidad de Navarra"
 pdf: "/Perfil/papers/tfg-sentiment-analysis.pdf"
-enlace: "https://github.com/AnderCortaTH12/TFG"
+enlace: "/Perfil/github"
 ---

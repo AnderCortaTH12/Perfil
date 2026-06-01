@@ -7,5 +7,5 @@ abstract: "Bachelor's Thesis (Industrial Engineering, Tecnun - University of Nav
 autores: ["Ander Corta Arrieta"]
 publicacion: "Tecnun - University of Navarra"
 pdf: "/Perfil/papers/tfg-sentiment-analysis.pdf"
-enlace: "https://github.com/AnderCortaTH12/TFG"
+enlace: "/Perfil/en/github"
 ---
