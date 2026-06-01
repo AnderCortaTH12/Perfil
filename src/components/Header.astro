@@ -1,0 +1,53 @@
+---
+import { useTranslations, sections, type Lang, type UIKey } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import LangSwitch from './LangSwitch.astro';
+
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const home = localizedPath('/', lang);
+
+// En el nav solo se evalúan enlaces de sección (no la home), así que basta
+// con comprobar coincidencia exacta o de prefijo (para páginas de detalle).
+function isActive(href: string) {
+  const h = href.replace(/\/$/, '') || '/';
+  return current === h || current.startsWith(h + '/');
+}
+---
+
+<header class="border-b border-line bg-paper/80 backdrop-blur sticky top-0 z-40">
+  <nav
+    class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-3 px-6 py-4"
+    aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}
+  >
+    <a href={home} class="font-serif text-lg font-semibold tracking-tight">
+      {t('site.name')}
+    </a>
+
+    <ul class="flex flex-1 flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+      {
+        sections.map((s) => {
+          const href = localizedPath('/' + s, lang);
+          const active = isActive(href);
+          return (
+            <li>
+              <a
+                href={href}
+                aria-current={active ? 'page' : undefined}
+                class:list={[
+                  'transition hover:text-accent',
+                  active ? 'text-accent' : 'text-muted',
+                ]}
+              >
+                {t(`section.${s}` as UIKey)}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <LangSwitch lang={lang} />
+  </nav>
+</header>

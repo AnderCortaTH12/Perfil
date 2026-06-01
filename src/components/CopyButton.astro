@@ -1,0 +1,42 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+interface Props {
+  text: string;
+  lang: Lang;
+}
+const { text, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<button
+  type="button"
+  class="copy-btn inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-sm text-muted transition hover:border-accent hover:text-accent"
+  data-copy={text}
+  data-label={t('prompt.copy')}
+  data-done={t('prompt.copied')}
+>
+  <span class="label">{t('prompt.copy')}</span>
+</button>
+
+<script>
+  function wireCopy() {
+    document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+      if (btn.dataset.wired) return;
+      btn.dataset.wired = 'true';
+      const label = btn.querySelector('.label');
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+          if (label) label.textContent = btn.dataset.done ?? 'Copied';
+          setTimeout(() => {
+            if (label) label.textContent = btn.dataset.label ?? 'Copy';
+          }, 1800);
+        } catch {
+          /* clipboard no disponible */
+        }
+      });
+    });
+  }
+  wireCopy();
+  document.addEventListener('astro:page-load', wireCopy);
+</script>

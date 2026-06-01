@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import ProyectoDetail from '../../../views/ProyectoDetail.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('proyectos-ia', (e) => e.data.idioma === 'en');
+  return items.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<ProyectoDetail lang="en" entry={entry} />

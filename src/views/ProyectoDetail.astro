@@ -1,0 +1,78 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Mermaid from '../components/Mermaid.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import { formatDate } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  entry: CollectionEntry<'proyectos-ia'>;
+}
+const { lang, entry } = Astro.props;
+const t = useTranslations(lang);
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<Layout lang={lang} title={d.titulo} description={d.resumen}>
+  <article class="mx-auto max-w-3xl px-6 pt-16 pb-12">
+    <a
+      href={localizedPath('/proyectos-ia', lang)}
+      class="text-sm text-muted transition hover:text-accent">{t('list.back')}</a
+    >
+
+    <header class="mt-6 mb-8">
+      <p class="text-sm text-muted">{formatDate(d.fecha, lang)}</p>
+      <h1 class="mt-2 font-serif text-4xl tracking-tight">{d.titulo}</h1>
+      <p class="mt-4 text-lg text-muted">{d.resumen}</p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-4 text-sm">
+        {
+          d.repo && (
+            <a
+              href={d.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-accent underline underline-offset-4"
+            >
+              {t('meta.repo')} ↗
+            </a>
+          )
+        }
+        {
+          d.demo && (
+            <a
+              href={d.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-accent underline underline-offset-4"
+            >
+              {t('meta.demo')} ↗
+            </a>
+          )
+        }
+      </div>
+
+      {
+        d.stack.length > 0 && (
+          <div class="mt-5">
+            <span class="text-xs uppercase tracking-wider text-muted">{t('meta.stack')}</span>
+            <ul class="mt-2 flex flex-wrap gap-1.5">
+              {d.stack.map((tech) => (
+                <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">{tech}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </header>
+
+    {d.diagrama && <Mermaid code={d.diagrama} label={t('meta.diagram')} />}
+
+    <div class="prose-content mt-8">
+      <Content />
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,52 @@
+---
+// Renderiza un diagrama Mermaid en el cliente a partir de texto Mermaid
+// (normalmente el campo `diagrama` del frontmatter de un proyecto de IA).
+interface Props {
+  code: string;
+  /** Etiqueta accesible opcional para el diagrama. */
+  label?: string;
+}
+const { code, label } = Astro.props;
+---
+
+<figure class="my-8">
+  {label && <figcaption class="mb-3 text-sm text-muted">{label}</figcaption>}
+  <div
+    class="mermaid-wrap overflow-x-auto rounded-lg border border-line bg-paper-soft p-4"
+  >
+    <pre class="mermaid m-0 flex justify-center bg-transparent text-ink">{code}</pre>
+  </div>
+</figure>
+
+<script>
+  import mermaid from 'mermaid';
+
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: 'strict',
+    fontFamily:
+      '"Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
+    theme: 'base',
+    themeVariables: {
+      background: '#f3f1ec',
+      primaryColor: '#fbfaf8',
+      primaryBorderColor: '#9a6a4f',
+      primaryTextColor: '#1a1815',
+      lineColor: '#6b665e',
+      secondaryColor: '#ece7df',
+      tertiaryColor: '#ffffff',
+      fontSize: '14px',
+    },
+  });
+
+  async function renderDiagrams() {
+    const nodes = document.querySelectorAll<HTMLElement>('pre.mermaid:not([data-processed])');
+    if (nodes.length) {
+      await mermaid.run({ nodes });
+    }
+  }
+
+  renderDiagrams();
+  // Re-render tras navegaciones con View Transitions de Astro.
+  document.addEventListener('astro:page-load', renderDiagrams);
+</script>

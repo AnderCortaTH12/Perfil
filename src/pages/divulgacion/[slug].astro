@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import DivulgacionDetail from '../../views/DivulgacionDetail.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('divulgacion', (e) => e.data.idioma === 'es');
+  return items.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<DivulgacionDetail lang="es" entry={entry} />

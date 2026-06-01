@@ -1,0 +1,58 @@
+---
+import { render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import CopyButton from '../components/CopyButton.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+import { getItems } from '../lib/content';
+
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const items = await getItems('prompts', lang);
+const rendered = await Promise.all(
+  items.map(async (p) => ({ entry: p, Content: (await render(p)).Content }))
+);
+---
+
+<Layout lang={lang} title={t('section.prompts')} description={t('desc.prompts')}>
+  <PageIntro title={t('section.prompts')} description={t('desc.prompts')} />
+
+  <section class="mx-auto max-w-3xl px-6 pb-16">
+    {
+      rendered.length === 0 ? (
+        <p class="text-muted">{t('list.empty')}</p>
+      ) : (
+        <div class="space-y-8">
+          {rendered.map(({ entry, Content }) => (
+            <article class="rounded-xl border border-line bg-white/50 p-6">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  {entry.data.categoria && (
+                    <span class="text-xs uppercase tracking-wider text-accent">
+                      {entry.data.categoria}
+                    </span>
+                  )}
+                  <h2 class="mt-1 font-serif text-xl">{entry.data.titulo}</h2>
+                </div>
+                <CopyButton lang={lang} text={entry.body ?? ''} />
+              </div>
+              <p class="mt-2 text-sm text-muted">{entry.data.descripcion}</p>
+              <div class="prose-content mt-4 rounded-lg bg-paper-soft p-4 text-sm">
+                <Content />
+              </div>
+              {entry.data.tags.length > 0 && (
+                <ul class="mt-4 flex flex-wrap gap-1.5">
+                  {entry.data.tags.map((tag) => (
+                    <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">
+                      #{tag}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </section>
+</Layout>

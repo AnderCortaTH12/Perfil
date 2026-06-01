@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import PaperDetail from '../../../views/PaperDetail.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('papers', (e) => e.data.idioma === 'en');
+  return items.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<PaperDetail lang="en" entry={entry} />
