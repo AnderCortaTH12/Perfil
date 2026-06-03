@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Usuario — Sistema de Solicitudes de Vacaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --sidebar-bg:#0F172A;--sidebar-text:#94A3B8;--sidebar-active:#38BDF8;
+  --sidebar-hover:#CBD5E1;--sidebar-section:#475569;
+  --bg:#F1F5F9;--surface:#FFFFFF;--text:#0F172A;--muted:#64748B;
+  --border:#E2E8F0;--accent:#2563EB;--accent-light:#EFF6FF;
+  --green:#059669;--green-light:#ECFDF5;
+  --amber:#D97706;--amber-light:#FFFBEB;
+  --red:#DC2626;--red-light:#FEF2F2;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --sidebar-w:268px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);
+  display:flex;min-height:100vh;font-size:15px;line-height:1.7}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--sidebar-bg);height:100vh;
+  position:fixed;top:0;left:0;overflow-y:auto;
+  display:flex;flex-direction:column;z-index:100;
+}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-thumb{background:#334155;border-radius:2px}
+.sb-header{padding:28px 24px 20px;border-bottom:1px solid #1E293B}
+.sb-logo{font-size:11px;font-weight:600;letter-spacing:0.12em;
+  text-transform:uppercase;color:#38BDF8;margin-bottom:6px}
+.sb-title{font-size:13px;font-weight:500;color:#F8FAFC;line-height:1.4}
+.sb-meta{font-size:11px;color:#475569;margin-top:6px}
+nav{padding:16px 0 32px}
+.nav-section{font-size:10px;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--sidebar-section);
+  padding:12px 24px 4px}
+.nav-link{display:block;padding:7px 24px;font-size:13px;font-weight:400;
+  color:var(--sidebar-text);text-decoration:none;
+  transition:color 0.15s,background 0.15s;
+  border-left:2px solid transparent;
+}
+.nav-link:hover{color:var(--sidebar-hover);background:rgba(255,255,255,0.03)}
+.nav-link.active{color:var(--sidebar-active);
+  border-left-color:var(--sidebar-active);background:rgba(56,189,248,0.06)}
+.nav-sub{padding-left:36px;font-size:12px}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);flex:1;padding:48px 64px 96px;
+  max-width:calc(var(--sidebar-w) + 860px)}
+
+/* ── DOCUMENT HEADER ── */
+.doc-header{margin-bottom:48px;padding-bottom:32px;
+  border-bottom:1px solid var(--border)}
+.doc-tag{font-size:11px;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.doc-title{font-size:36px;font-weight:700;line-height:1.15;
+  letter-spacing:-0.5px;margin-bottom:8px}
+.doc-subtitle{font-size:18px;font-weight:400;color:var(--muted);margin-bottom:20px}
+.doc-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.badge{font-size:12px;font-weight:500;padding:4px 12px;
+  border-radius:20px;border:1px solid var(--border);
+  color:var(--muted);background:var(--surface)}
+.badge-active{color:var(--green);border-color:#A7F3D0;background:var(--green-light)}
+
+/* ── SECTIONS ── */
+section{margin-bottom:56px}
+section:last-child{margin-bottom:0}
+h2{font-size:22px;font-weight:700;letter-spacing:-0.3px;margin-bottom:6px;
+  padding-top:8px}
+.section-tag{font-size:11px;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.divider{height:1px;background:var(--border);margin:12px 0 24px}
+h3{font-size:16px;font-weight:600;margin:28px 0 12px;color:var(--text)}
+p{margin-bottom:14px;color:#334155}
+p:last-child{margin-bottom:0}
+
+/* ── TABLES ── */
+.table-wrap{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead tr{background:var(--text)}
+thead th{padding:10px 14px;text-align:left;font-weight:600;
+  font-size:12px;letter-spacing:0.04em;color:#F8FAFC;
+  border:none}
+thead th:first-child{border-radius:6px 0 0 0}
+thead th:last-child{border-radius:0 6px 0 0}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border-bottom:none}
+tbody td{padding:11px 14px;vertical-align:top;color:#334155}
+tbody tr:hover{background:#F8FAFC}
+td strong{color:var(--text)}
+.req{color:var(--red);font-weight:700}
+
+/* ── STEPS ── */
+.steps{margin:16px 0}
+.step{display:flex;gap:16px;margin-bottom:16px;align-items:flex-start}
+.step-n{min-width:28px;height:28px;border-radius:50%;
+  background:var(--accent);color:#fff;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;margin-top:2px;
+  flex-shrink:0}
+.step-body{flex:1;padding-top:3px}
+.step-body p{margin-bottom:0}
+code{background:#F1F5F9;border:1px solid var(--border);
+  padding:2px 7px;border-radius:4px;font-size:13px;
+  font-family:'SF Mono','Cascadia Code',monospace;color:#0F172A}
+
+/* ── CALLOUTS ── */
+.callout{display:flex;gap:14px;padding:14px 18px;
+  border-radius:8px;margin:16px 0;font-size:14px}
+.callout-icon{font-size:16px;margin-top:1px;flex-shrink:0}
+.callout-body strong{display:block;font-size:13px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.callout-info{background:var(--accent-light);border:1px solid #BFDBFE}
+.callout-info .callout-body{color:#1E40AF}
+.callout-success{background:var(--green-light);border:1px solid #A7F3D0}
+.callout-success .callout-body{color:#065F46}
+.callout-warning{background:var(--amber-light);border:1px solid #FDE68A}
+.callout-warning .callout-body{color:#92400E}
+.callout-danger{background:var(--red-light);border:1px solid #FECACA}
+.callout-danger .callout-body{color:#991B1B}
+
+/* ── CAPTURE PLACEHOLDER ── */
+.capture{border:1.5px dashed #CBD5E1;border-radius:8px;
+  padding:28px 20px;text-align:center;margin:16px 0;
+  background:#FAFAFA;color:var(--muted);font-size:13px;
+  font-style:italic}
+.capture-label{font-size:11px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:#94A3B8;display:block;margin-bottom:6px}
+
+/* ── FIELD LIST ── */
+.field-list{margin:12px 0 16px;display:flex;flex-direction:column;gap:8px}
+.field-item{font-size:14px;color:#334155;padding:10px 14px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;border-left:3px solid var(--accent)}
+.field-item strong{color:var(--text)}
+
+/* ── STATUS BADGES ── */
+.status{display:inline-block;font-size:12px;font-weight:600;
+  padding:3px 10px;border-radius:12px;letter-spacing:0.03em}
+.status-pending{background:#FEF9C3;color:#854D0E;border:1px solid #FDE047}
+.status-approved{background:var(--green-light);color:#065F46;border:1px solid #A7F3D0}
+.status-rejected{background:var(--red-light);color:#991B1B;border:1px solid #FECACA}
+.status-cancelled{background:#F1F5F9;color:var(--muted);border:1px solid var(--border)}
+
+/* ── EXEC SUMMARY ── */
+.exec-summary{background:var(--text);color:#F8FAFC;border-radius:12px;
+  padding:36px 40px;margin-top:8px}
+.exec-summary h3{color:#38BDF8;margin-top:24px;font-size:14px;
+  text-transform:uppercase;letter-spacing:0.1em}
+.exec-summary h3:first-child{margin-top:0}
+.exec-summary p,.exec-summary li{color:#CBD5E1;font-size:14px}
+.exec-summary ol,.exec-summary ul{margin-left:20px;margin-top:8px}
+.exec-summary li{margin-bottom:6px}
+.exec-summary .gold{color:#FCD34D;font-weight:600}
+
+/* ── DIAGRAM ── */
+.diagram-wrap{margin:20px 0;display:flex;justify-content:center;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:24px}
+
+/* ── PRINT ── */
+@media print{
+  #sidebar{display:none}
+  #main{margin:0;padding:24px;max-width:100%}
+}
+@media(max-width:900px){
+  #sidebar{display:none}
+  #main{margin:0;padding:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">Guía de Usuario</div>
+    <div class="sb-title">Sistema de Solicitudes de Vacaciones</div>
+    <div class="sb-meta">v1.0 · Junio 2026</div>
+  </div>
+  <nav>
+    <div class="nav-section">Contenido</div>
+    <a class="nav-link active" href="#sec1">1. Introducción</a>
+    <a class="nav-link nav-sub" href="#sec1-1">1.1 Propósito</a>
+    <a class="nav-link nav-sub" href="#sec1-2">1.2 Alcance</a>
+    <a class="nav-link nav-sub" href="#sec1-3">1.3 Audiencia</a>
+    <a class="nav-link" href="#sec2">2. Descripción General</a>
+    <a class="nav-link" href="#sec3">3. Conceptos Clave</a>
+    <a class="nav-link" href="#sec4">4. Requisitos Previos</a>
+    <a class="nav-link" href="#sec5">5. Proceso de Ejecución</a>
+    <a class="nav-link" href="#sec6">6. Configuración Inicial</a>
+    <a class="nav-link" href="#sec7">7. Flujo de Ejecución</a>
+    <a class="nav-link nav-sub" href="#sec7-1">7.1 Pantalla de inicio</a>
+    <a class="nav-link nav-sub" href="#sec7-2">7.2 Nueva solicitud</a>
+    <a class="nav-link nav-sub" href="#sec7-3">7.3 Validación</a>
+    <a class="nav-link nav-sub" href="#sec7-4">7.4 Confirmación</a>
+    <a class="nav-link nav-sub" href="#sec7-5">7.5 Aprobación supervisor</a>
+    <a class="nav-link nav-sub" href="#sec7-6">7.6 Notificación</a>
+    <a class="nav-link" href="#sec8">8. Interpretación</a>
+    <a class="nav-link" href="#sec9">9. Restauración</a>
+    <a class="nav-link" href="#sec10">10. Seguridad</a>
+    <a class="nav-link" href="#sec11">11. Buenas Prácticas</a>
+    <a class="nav-link" href="#sec12">12. Resumen Ejecutivo</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- DOCUMENT HEADER -->
+  <header class="doc-header">
+    <div class="doc-tag">Documentación Funcional · SAP / ERP Corporativo</div>
+    <h1 class="doc-title">Sistema de Gestión de<br>Solicitudes de Vacaciones</h1>
+    <p class="doc-subtitle">Guía de usuario completa para empleados y supervisores</p>
+    <div class="doc-badges">
+      <span class="badge">Versión 1.0</span>
+      <span class="badge">Junio 2026</span>
+      <span class="badge badge-active">● Vigente</span>
+      <span class="badge">Uso interno</span>
+    </div>
+  </header>
+
+  <!-- SEC 1 -->
+  <section id="sec1">
+    <div class="section-tag">01 — Introducción</div>
+    <h2>Introducción</h2>
+    <div class="divider"></div>
+
+    <h3 id="sec1-1">1.1 Propósito del documento</h3>
+    <p>Este documento proporciona instrucciones operativas completas para la utilización del <strong>Sistema de Gestión de Solicitudes de Vacaciones</strong>. Su objetivo es permitir que cualquier usuario, sin conocimiento previo del sistema, pueda solicitar vacaciones y hacer seguimiento de sus solicitudes de manera autónoma.</p>
+
+    <h3 id="sec1-2">1.2 Alcance</h3>
+    <p>La documentación cubre el proceso completo desde la solicitud inicial de vacaciones hasta la aprobación final por parte del supervisor. Se incluyen:</p>
+    <div class="field-list">
+      <div class="field-item">Creación de nuevas solicitudes de vacaciones</div>
+      <div class="field-item">Consulta del estado de solicitudes existentes</div>
+      <div class="field-item">Aprobación de solicitudes (para supervisores)</div>
+      <div class="field-item">Cancelación de solicitudes pendientes</div>
+    </div>
+    <p>No se cubre en este documento la administración de calendarios de vacaciones a nivel organizacional, que es responsabilidad del área de Recursos Humanos.</p>
+
+    <h3 id="sec1-3">1.3 Audiencia objetivo</h3>
+    <div class="field-list">
+      <div class="field-item"><strong>Empleados operativos:</strong> Todos los colaboradores que necesitan solicitar vacaciones.</div>
+      <div class="field-item"><strong>Supervisores / Jefes de equipo:</strong> Responsables de aprobar o rechazar solicitudes de sus subordinados.</div>
+    </div>
+    <p>Se presupone que el lector tiene acceso al sistema SAP/ERP y conocimiento básico de navegación en aplicaciones web, pero no se requiere experiencia técnica previa.</p>
+  </section>
+
+  <!-- SEC 2 -->
+  <section id="sec2">
+    <div class="section-tag">02 — Descripción</div>
+    <h2>Descripción General</h2>
+    <div class="divider"></div>
+    <p>El <strong>Sistema de Gestión de Solicitudes de Vacaciones</strong> es un módulo integrado en el ERP corporativo que automatiza el proceso de solicitud y aprobación de permisos de vacaciones. Reemplaza el proceso manual anterior (formularios en papel y correos electrónicos) y permite:</p>
+    <div class="field-list">
+      <div class="field-item"><strong>Transparencia:</strong> Empleados y supervisores ven el estado en tiempo real de todas las solicitudes.</div>
+      <div class="field-item"><strong>Trazabilidad:</strong> Cada solicitud queda registrada con fecha, autor y decisión.</div>
+      <div class="field-item"><strong>Automatización:</strong> El sistema valida automáticamente disponibilidad de días y conflictos de equipo.</div>
+      <div class="field-item"><strong>Notificaciones:</strong> Supervisores reciben alertas cuando hay nuevas solicitudes pendientes de aprobación.</div>
+    </div>
+    <p>El flujo es simple: empleado solicita → supervisor revisa → aprobación o rechazo → confirmación al empleado.</p>
+  </section>
+
+  <!-- SEC 3 -->
+  <section id="sec3">
+    <div class="section-tag">03 — Conceptos</div>
+    <h2>Conceptos Clave</h2>
+    <div class="divider"></div>
+    <p>Antes de operar el sistema, familiarízate con los siguientes términos:</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Concepto</th><th>Definición</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Solicitud de Vacaciones</strong></td><td>Petición formal de un empleado para ausentarse durante un período determinado. Requiere aprobación del supervisor.</td></tr>
+        <tr><td><strong>Período de vacaciones</strong></td><td>Rango de fechas solicitadas. Puede ser continuo (días seguidos) o fraccionado (varios períodos en el año).</td></tr>
+        <tr><td><strong>Saldo disponible</strong></td><td>Número de días de vacaciones que el empleado tiene derecho a tomar en el año actual. Se asigna al 1 de enero y se descuenta con cada solicitud aprobada.</td></tr>
+        <tr><td><strong>Supervisor / Jefe de equipo</strong></td><td>Responsable de revisar y aprobar o rechazar solicitudes de sus empleados directos.</td></tr>
+        <tr><td><strong>Estado de solicitud</strong></td><td>Situación actual: <span class="status status-pending">Pendiente</span> · <span class="status status-approved">Aprobada</span> · <span class="status status-rejected">Rechazada</span> · <span class="status status-cancelled">Cancelada</span></td></tr>
+        <tr><td><strong>Observaciones</strong></td><td>Campo de comentarios donde el supervisor puede justificar una aprobación o rechazo.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- SEC 4 -->
+  <section id="sec4">
+    <div class="section-tag">04 — Requisitos</div>
+    <h2>Requisitos Previos</h2>
+    <div class="divider"></div>
+
+    <h3>4.1 Accesos y permisos</h3>
+    <div class="field-list">
+      <div class="field-item"><strong>Credenciales de acceso al ERP:</strong> Usuario y contraseña corporativos.</div>
+      <div class="field-item"><strong>Rol de empleado o supervisor:</strong> Asignado por el área de Recursos Humanos.</div>
+      <div class="field-item"><strong>Acceso a la transacción ZVacaciones:</strong> Verificado en el momento del login.</div>
+    </div>
+
+    <h3>4.2 Dependencias técnicas</h3>
+    <div class="field-list">
+      <div class="field-item"><strong>Navegador web:</strong> Chrome, Firefox, Safari o Edge (versiones actuales).</div>
+      <div class="field-item"><strong>Conectividad:</strong> Acceso a la red corporativa (VPN si trabajas desde fuera de la oficina).</div>
+      <div class="field-item"><strong>JavaScript habilitado</strong> y <strong>cookies aceptadas:</strong> Necesarios para el correcto funcionamiento del sistema.</div>
+    </div>
+
+    <h3>4.3 Condiciones de negocio</h3>
+    <div class="field-list">
+      <div class="field-item"><strong>Saldo disponible:</strong> Consulta tu saldo en la pantalla de inicio del módulo antes de solicitar.</div>
+      <div class="field-item"><strong>Sin conflictos de cobertura:</strong> No puede haber más de un 25% del equipo ausente simultáneamente.</div>
+      <div class="field-item"><strong>Planificación con anticipación:</strong> Solicita con al menos 15 días de antelación (recomendado 30 días).</div>
+      <div class="field-item"><strong>Documentación en orden:</strong> Asuntos administrativos pendientes deben estar resueltos antes de la ausencia.</div>
+    </div>
+  </section>
+
+  <!-- SEC 5 -->
+  <section id="sec5">
+    <div class="section-tag">05 — Proceso</div>
+    <h2>Proceso de Ejecución</h2>
+    <div class="divider"></div>
+
+    <h3>5.1 Visión general del proceso</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Paso</th><th>Actor</th><th>Acción</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Empleado</td><td>Accede al sistema y abre la transacción</td><td>Pantalla inicial con opciones disponibles</td></tr>
+        <tr><td>2</td><td>Empleado</td><td>Selecciona "Nueva Solicitud"</td><td>Formulario en blanco para rellenar</td></tr>
+        <tr><td>3</td><td>Empleado</td><td>Completa campos (fechas, observaciones)</td><td>Validación automática de datos</td></tr>
+        <tr><td>4</td><td>Empleado</td><td>Envía solicitud</td><td>Solicitud creada en estado "Pendiente"</td></tr>
+        <tr><td>5</td><td>Sistema</td><td>Notifica al supervisor</td><td>Supervisor recibe email de alerta</td></tr>
+        <tr><td>6</td><td>Supervisor</td><td>Revisa y toma decisión (aprobar/rechazar)</td><td>Solicitud actualizada con decisión</td></tr>
+        <tr><td>7</td><td>Sistema</td><td>Notifica al empleado</td><td>Empleado recibe confirmación de resultado</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>5.2 Diagrama de flujo del proceso</h3>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 440 660" xmlns="http://www.w3.org/2000/svg" style="max-width:440px;width:100%">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#475569"/>
+          </marker>
+        </defs>
+        <style>
+          .fb{fill:#EFF6FF;stroke:#2563EB;stroke-width:1.5}
+          .fd{fill:#FFFBEB;stroke:#D97706;stroke-width:1.5}
+          .fe{fill:#ECFDF5;stroke:#059669;stroke-width:1.5;rx:20}
+          .ft{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;fill:#0F172A;text-anchor:middle}
+          .fts{font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;fill:#64748B}
+          .fl{stroke:#475569;stroke-width:1.5;fill:none;marker-end:url(#arr)}
+        </style>
+        <!-- Start -->
+        <ellipse cx="220" cy="28" rx="32" ry="18" fill="#0F172A" stroke="#0F172A"/>
+        <text x="220" y="33" class="ft" fill="#F8FAFC">INICIO</text>
+        <line x1="220" y1="46" x2="220" y2="72" class="fl"/>
+        <!-- 1 -->
+        <rect x="120" y="72" width="200" height="44" rx="6" class="fb"/>
+        <text x="220" y="94" class="ft">Empleado accede</text>
+        <text x="220" y="108" class="ft">al sistema</text>
+        <line x1="220" y1="116" x2="220" y2="142" class="fl"/>
+        <!-- 2 -->
+        <rect x="120" y="142" width="200" height="44" rx="6" class="fb"/>
+        <text x="220" y="164" class="ft">Selecciona</text>
+        <text x="220" y="178" class="ft">"Nueva Solicitud"</text>
+        <line x1="220" y1="186" x2="220" y2="212" class="fl"/>
+        <!-- 3 -->
+        <rect x="120" y="212" width="200" height="44" rx="6" class="fb"/>
+        <text x="220" y="234" class="ft">Completa fechas</text>
+        <text x="220" y="248" class="ft">y detalles</text>
+        <line x1="220" y1="256" x2="220" y2="282" class="fl"/>
+        <!-- Decision -->
+        <polygon points="220,282 300,322 220,362 140,322" class="fd"/>
+        <text x="220" y="318" class="ft">¿Datos</text>
+        <text x="220" y="332" class="ft">válidos?</text>
+        <!-- NO arrow back -->
+        <path d="M140 322 L60 322 L60 186 L120 186" class="fl"/>
+        <text x="78" y="316" class="fts">NO</text>
+        <!-- YES -->
+        <line x1="220" y1="362" x2="220" y2="388" class="fl"/>
+        <text x="230" y="380" class="fts">SÍ</text>
+        <!-- 4 -->
+        <rect x="120" y="388" width="200" height="44" rx="6" class="fb"/>
+        <text x="220" y="410" class="ft">Envía solicitud</text>
+        <text x="220" y="424" class="ft">→ Estado: Pendiente</text>
+        <line x1="220" y1="432" x2="220" y2="458" class="fl"/>
+        <!-- 5 -->
+        <rect x="120" y="458" width="200" height="44" rx="6" class="fb"/>
+        <text x="220" y="480" class="ft">Supervisor</text>
+        <text x="220" y="494" class="ft">aprueba / rechaza</text>
+        <line x1="220" y1="502" x2="220" y2="528" class="fl"/>
+        <!-- 6 -->
+        <rect x="120" y="528" width="200" height="44" rx="6" class="fb"/>
+        <text x="220" y="550" class="ft">Empleado recibe</text>
+        <text x="220" y="564" class="ft">notificación por email</text>
+        <line x1="220" y1="572" x2="220" y2="596" class="fl"/>
+        <!-- End -->
+        <ellipse cx="220" cy="618" rx="32" ry="20" fill="#059669" stroke="#059669"/>
+        <text x="220" y="623" class="ft" fill="#FFFFFF">FIN</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SEC 6 -->
+  <section id="sec6">
+    <div class="section-tag">06 — Configuración</div>
+    <h2>Configuración Inicial</h2>
+    <div class="divider"></div>
+
+    <h3>6.1 Rutas de acceso</h3>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><p><strong>Ruta de navegación:</strong> SAP → Módulo de Recursos Humanos → Gestión de Personal → Solicitudes de Ausencia</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><p><strong>Código de transacción directa:</strong> Escribe <code>/nZVacaciones</code> en el campo de comandos (esquina superior izquierda) y pulsa Enter.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><p><strong>Acceso desde favoritos:</strong> Si tienes esta funcionalidad marcada como favorita, haz clic en el icono de favoritos en la barra de navegación.</p></div></div>
+    </div>
+
+    <h3>6.2 Parámetros técnico-funcionales</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Parámetro</th><th>Valor típico</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Código de empleado</strong></td><td>Asignado automáticamente</td><td>Identificador único que vincula tus solicitudes a tu registro de personal.</td></tr>
+        <tr><td><strong>Departamento</strong></td><td>Recuperado del Maestro de RRHH</td><td>Determina a quién se enruta la solicitud para aprobación.</td></tr>
+        <tr><td><strong>Supervisor asignado</strong></td><td>Jefe de equipo registrado</td><td>Persona que recibirá la solicitud para revisar y aprobar.</td></tr>
+        <tr><td><strong>Año fiscal</strong></td><td>Año calendario actual</td><td>El saldo de vacaciones se reinicia cada 1 de enero. No es personalizable.</td></tr>
+        <tr><td><strong>Días hábiles</strong></td><td>Lunes a viernes (excluye festivos)</td><td>El sistema no cuenta sábados, domingos ni festivos locales.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- SEC 7 -->
+  <section id="sec7">
+    <div class="section-tag">07 — Flujo Detallado</div>
+    <h2>Flujo de Ejecución Detallado</h2>
+    <div class="divider"></div>
+
+    <h3 id="sec7-1">7.1 Paso 1: Pantalla de Inicio</h3>
+    <p>Una vez accedes a la transacción ZVacaciones, se abre la pantalla de inicio con un resumen de tu situación actual.</p>
+    <div class="field-list">
+      <div class="field-item"><strong>Saldo anual de vacaciones:</strong> Muestra el total de días disponibles en el año actual. Ejemplo: "25 días disponibles".</div>
+      <div class="field-item"><strong>Días utilizados:</strong> Total de días de vacaciones ya aprobadas y disfrutadas.</div>
+      <div class="field-item"><strong>Solicitudes pendientes:</strong> Número de solicitudes esperando aprobación del supervisor.</div>
+      <div class="field-item"><strong>Botones de acción:</strong> "Nueva Solicitud", "Ver Mis Solicitudes", "Ver Calendario Equipo".</div>
+    </div>
+    <div class="capture"><span class="capture-label">📷 Captura de pantalla</span>Pantalla de inicio mostrando saldo de 18 días disponibles, 7 días utilizados, y botón "Nueva Solicitud" destacado</div>
+    <div class="field-list">
+      <div class="field-item">Haz clic en <strong>"Nueva Solicitud"</strong> para crear una nueva solicitud de vacaciones.</div>
+      <div class="field-item">Haz clic en <strong>"Ver Mis Solicitudes"</strong> para consultar el historial de solicitudes.</div>
+      <div class="field-item">Haz clic en <strong>"Ver Calendario Equipo"</strong> para ver qué días están reservados por tus compañeros.</div>
+    </div>
+
+    <h3 id="sec7-2">7.2 Paso 2: Crear Nueva Solicitud</h3>
+    <p>Al hacer clic en "Nueva Solicitud", se abre un formulario en blanco. Debes completar los campos requeridos.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Campo</th><th>Obligatorio</th><th>Tipo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fecha de inicio</strong></td><td><span class="req">*</span></td><td>Fecha</td><td>Primer día de las vacaciones. Formato: DD/MM/AAAA. No puede ser una fecha pasada ni un fin de semana.</td></tr>
+        <tr><td><strong>Fecha de fin</strong></td><td><span class="req">*</span></td><td>Fecha</td><td>Último día de las vacaciones. Debe ser igual o posterior a la fecha de inicio.</td></tr>
+        <tr><td><strong>Tipo de ausencia</strong></td><td><span class="req">*</span></td><td>Desplegable</td><td>Opciones: "Vacaciones", "Permiso remunerado" o "Permiso sin sueldo". Por defecto: "Vacaciones".</td></tr>
+        <tr><td><strong>Número de días</strong></td><td>—</td><td>Solo lectura</td><td>Calculado automáticamente. Muestra días hábiles entre fecha inicio y fin.</td></tr>
+        <tr><td><strong>Observaciones</strong></td><td>—</td><td>Texto libre</td><td>Campo opcional para añadir notas. Máximo 500 caracteres.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p><strong>Instrucciones paso a paso:</strong></p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><p>Introduce la <strong>Fecha de inicio</strong>. Haz clic en el calendario al lado para seleccionar gráficamente, o escribe en formato DD/MM/AAAA.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><p>Introduce la <strong>Fecha de fin</strong> de la misma manera. El sistema valida automáticamente que sea posterior a la fecha de inicio.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><p>En <strong>Tipo de ausencia</strong>, selecciona el motivo desde el desplegable. "Vacaciones" descuenta días; "Permiso remunerado" no.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><p>Verifica el campo <strong>Número de días</strong> (calculado automáticamente). Confirma que coincide con lo esperado.</p></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body"><p>Añade <strong>Observaciones</strong> opcionales para tu supervisor si lo consideras necesario.</p></div></div>
+      <div class="step"><div class="step-n">6</div><div class="step-body"><p>Haz clic en <strong>Guardar solicitud</strong> para crear la solicitud en estado "Pendiente".</p></div></div>
+    </div>
+    <div class="capture"><span class="capture-label">📷 Captura de pantalla</span>Formulario completado: Fecha inicio 10/07/2026, Fecha fin 24/07/2026, Tipo "Vacaciones", Número de días "11", botón "Guardar" visible</div>
+    <div class="callout callout-info">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body"><strong>Consejo</strong>Revisa siempre el desglose de días antes de enviar. El sistema excluye automáticamente sábados, domingos y festivos locales. Si la solicitud incluye un festivo, aparecerá una nota aclaratoria.</div>
+    </div>
+
+    <h3 id="sec7-3">7.3 Paso 3: Validación de Datos</h3>
+    <p>Al hacer clic en "Guardar solicitud", el sistema valida automáticamente los datos.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Validación</th><th>Condición</th><th>Mensaje de error</th></tr></thead>
+      <tbody>
+        <tr><td>Fecha de inicio requerida</td><td>Campo vacío</td><td>"Error: Debe indicar una fecha de inicio"</td></tr>
+        <tr><td>Fecha de fin requerida</td><td>Campo vacío</td><td>"Error: Debe indicar una fecha de fin"</td></tr>
+        <tr><td>Fecha de inicio no puede ser pasada</td><td>Anterior a hoy</td><td>"Error: No se pueden solicitar vacaciones para fechas pasadas"</td></tr>
+        <tr><td>Saldo insuficiente</td><td>Días solicitados > saldo disponible</td><td>"Error: Saldo de vacaciones insuficiente (disponibles: X días)"</td></tr>
+        <tr><td>Conflicto de cobertura</td><td>Más del 25% del equipo ausente</td><td>"Advertencia: Posible conflicto de cobertura de equipo"</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3 id="sec7-4">7.4 Paso 4: Confirmación de Envío</h3>
+    <p>Si todos los datos son válidos, el sistema crea la solicitud y muestra una confirmación.</p>
+    <div class="callout callout-success">
+      <span class="callout-icon">✓</span>
+      <div class="callout-body"><strong>Mensaje de confirmación</strong>"Solicitud creada correctamente. ID: 2026-XXXXX. Estado: Pendiente de aprobación. Tu supervisor recibirá una notificación."</div>
+    </div>
+    <div class="capture"><span class="capture-label">📷 Captura de pantalla</span>Pantalla de confirmación mostrando el ID de solicitud generado y el estado "Pendiente"</div>
+
+    <h3 id="sec7-5">7.5 Paso 5: Aprobación por el Supervisor</h3>
+    <p>El supervisor recibe un email de alerta y debe acceder al sistema para revisar las solicitudes pendientes.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><p>Accede a la transacción ZVacaciones con perfil de supervisor.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><p>Haz clic en <strong>"Solicitudes Pendientes"</strong>. Aparece una tabla con todas las solicitudes de tu equipo que esperan decisión.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><p>Selecciona la solicitud que deseas revisar. Puedes ver las fechas, días solicitados y observaciones del empleado.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><p>Haz clic en <strong>"Aprobar"</strong> o <strong>"Rechazar"</strong>. En caso de rechazo, añade obligatoriamente una justificación en el campo de observaciones.</p></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body"><p>Confirma la acción. El sistema actualiza el estado y notifica al empleado automáticamente.</p></div></div>
+    </div>
+    <div class="capture"><span class="capture-label">📷 Captura de pantalla</span>Pantalla de aprobación con tabla de solicitudes pendientes, botones "Aprobar" y "Rechazar" visibles, ejemplo: solicitud de empleado "Marta López"</div>
+
+    <h3 id="sec7-6">7.6 Paso 6: Notificación al Empleado</h3>
+    <p>Una vez el supervisor toma una decisión, el empleado recibe automáticamente un email con el resultado.</p>
+    <div class="callout callout-success">
+      <span class="callout-icon">✉</span>
+      <div class="callout-body"><strong>Ejemplo de email de aprobación</strong><strong>Asunto:</strong> Solicitud de vacaciones aprobada (ID: 2026-00456)<br><br>Tu solicitud de vacaciones del 10 al 24 de julio de 2026 ha sido aprobada. Los 11 días se han descontado de tu saldo anual. Saldo restante: 7 días. Supervisor: Juan García García.</div>
+    </div>
+  </section>
+
+  <!-- SEC 8 -->
+  <section id="sec8">
+    <div class="section-tag">08 — Resultados</div>
+    <h2>Interpretación del Resultado</h2>
+    <div class="divider"></div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Estado</th><th>Significado</th><th>Acciones posibles</th></tr></thead>
+      <tbody>
+        <tr><td><span class="status status-pending">Pendiente</span></td><td>La solicitud está esperando revisión del supervisor. No se han descontado días del saldo.</td><td>Esperar respuesta o cancelar la solicitud.</td></tr>
+        <tr><td><span class="status status-approved">Aprobada</span></td><td>Supervisor ha aprobado la solicitud. Los días ya están descontados del saldo anual.</td><td>Las vacaciones son confirmadas. Las fechas están bloqueadas en el calendario de equipo.</td></tr>
+        <tr><td><span class="status status-rejected">Rechazada</span></td><td>Supervisor ha denegado la solicitud. Se mantiene el saldo íntegro.</td><td>Consulta observaciones del supervisor. Puedes solicitar otras fechas.</td></tr>
+        <tr><td><span class="status status-cancelled">Cancelada</span></td><td>La solicitud ha sido cancelada (por el empleado o por el sistema).</td><td>Si estaba aprobada, los días se devuelven al saldo. Puedes crear una nueva solicitud.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p><strong>Cómo consultar el estado:</strong></p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><p>Ve a la pantalla de inicio del módulo ZVacaciones.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><p>Haz clic en <strong>"Ver Mis Solicitudes"</strong>.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><p>Busca tu solicitud en la tabla. El estado aparece en la columna "Estado". Haz clic en la solicitud para ver detalles completos.</p></div></div>
+    </div>
+  </section>
+
+  <!-- SEC 9 -->
+  <section id="sec9">
+    <div class="section-tag">09 — Restauración</div>
+    <h2>Restauración de Datos</h2>
+    <div class="divider"></div>
+
+    <h3>Cancelación de solicitudes</h3>
+    <p>Si necesitas cancelar una solicitud ya aprobada, puedes hacerlo desde "Ver Mis Solicitudes".</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><p>Accede a <strong>"Ver Mis Solicitudes"</strong>.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><p>Localiza la solicitud (debe estar en estado "Aprobada" o "Pendiente").</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><p>Haz clic en el botón <strong>"Cancelar"</strong> al lado de la solicitud.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><p>Confirma la cancelación. Puedes añadir una observación opcional.</p></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body"><p>La solicitud cambia a estado "Cancelada" y, si estaba aprobada, los días se devuelven automáticamente a tu saldo anual.</p></div></div>
+    </div>
+    <div class="field-list">
+      <div class="field-item">No puedes cancelar solicitudes cuya fecha de inicio es anterior a hoy (ya han ocurrido).</div>
+      <div class="field-item">No puedes cancelar solicitudes rechazadas.</div>
+      <div class="field-item">Si necesitas cambiar fechas de una solicitud aprobada, cancélala y crea una nueva.</div>
+    </div>
+
+    <h3>Devolución de días por HR</h3>
+    <p>Si por motivos administrativos necesitas que se devuelvan días a tu saldo (p. ej. corrección de errores), contacta al área de Recursos Humanos. No hay un proceso automático de "deshacer" desde la transacción ZVacaciones. Solo HR puede modificar saldos de forma manual.</p>
+  </section>
+
+  <!-- SEC 10 -->
+  <section id="sec10">
+    <div class="section-tag">10 — Seguridad</div>
+    <h2>Seguridad y Trazabilidad</h2>
+    <div class="divider"></div>
+
+    <h3>10.1 Control de accesos y roles</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rol</th><th>Permisos</th><th>Asignación</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Empleado</strong></td><td>Crear solicitudes propias, ver mis solicitudes, cancelar solicitudes pendientes, consultar calendario del equipo.</td><td>Todos los empleados automáticamente.</td></tr>
+        <tr><td><strong>Supervisor</strong></td><td>Aprobar/rechazar solicitudes del equipo, ver historial, generar reportes de ausencias.</td><td>Jefes de equipo designados por HR.</td></tr>
+        <tr><td><strong>Administrador HR</strong></td><td>Acceso completo: crear, editar, eliminar solicitudes; gestionar saldos; configurar parámetros globales.</td><td>Personal de Recursos Humanos solamente.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>10.2 Trazabilidad y auditoría</h3>
+    <p>Cada solicitud es auditada completamente. Para ver el historial de cambios:</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><p>Desde "Ver Mis Solicitudes", abre la solicitud que deseas inspeccionar.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><p>Haz clic en la pestaña <strong>"Historial"</strong> o <strong>"Auditoría"</strong> (según versión del sistema).</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><p>Aparece una tabla cronológica con todos los cambios: creación, modificaciones, aprobaciones, cancelaciones.</p></div></div>
+    </div>
+    <div class="field-list">
+      <div class="field-item">Fecha y hora exacta del cambio</div>
+      <div class="field-item">Usuario que realizó la acción (empleado o supervisor)</div>
+      <div class="field-item">Tipo de acción (creada, aprobada, rechazada, cancelada)</div>
+      <div class="field-item">Cambios de valores si se editó algún campo</div>
+      <div class="field-item">Comentarios o observaciones añadidas</div>
+    </div>
+
+    <h3>10.3 Datos sensibles</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Elemento</th><th>Restricción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Acceso a solicitudes</strong></td><td>Cada empleado ve solo sus propias solicitudes. El supervisor ve las de su equipo. HR ve todas.</td></tr>
+        <tr><td><strong>Observaciones privadas</strong></td><td>Solo visibles para el empleado, su supervisor y HR. No aparecen en reportes públicos.</td></tr>
+        <tr><td><strong>Exportación de reportes</strong></td><td>Solo supervisores y HR pueden generar reportes, respetando las restricciones de privacidad.</td></tr>
+        <tr><td><strong>Retención de datos</strong></td><td>Las solicitudes se conservan durante 7 años conforme a legislación laboral. Se eliminan automáticamente después.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- SEC 11 -->
+  <section id="sec11">
+    <div class="section-tag">11 — Buenas Prácticas</div>
+    <h2>Buenas Prácticas y Errores Comunes</h2>
+    <div class="divider"></div>
+
+    <h3>11.1 Buenas prácticas recomendadas</h3>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><p><strong>Planifica con anticipación.</strong> Solicita vacaciones con al menos 30 días de antelación para mejorar las probabilidades de aprobación.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><p><strong>Verifica tu saldo antes de solicitar.</strong> Comprueba los días disponibles en la pantalla de inicio antes de crear la solicitud.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><p><strong>Coordina con tu equipo.</strong> Habla con tus compañeros y supervisor sobre las fechas antes de enviar la solicitud formal.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><p><strong>Consulta el calendario del equipo.</strong> Abre "Ver Calendario Equipo" antes de solicitar para ver qué días ya están reservados.</p></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body"><p><strong>Ten cuidado con festivos y puentes.</strong> El sistema excluye festivos automáticamente, pero revisa si tu solicitud afecta la cobertura del equipo.</p></div></div>
+      <div class="step"><div class="step-n">6</div><div class="step-body"><p><strong>Mantén tu email actualizado.</strong> Las notificaciones de aprobación/rechazo llegan por correo. Actualiza tu dirección en el módulo de Datos Personales del sistema HR.</p></div></div>
+    </div>
+
+    <h3>11.2 Errores más comunes</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Error</th><th>Causa</th><th>Solución</th></tr></thead>
+      <tbody>
+        <tr><td><strong>"Saldo insuficiente"</strong></td><td>Solicitas más días de los que tienes disponibles.</td><td>Verifica tu saldo en la pantalla inicial antes de solicitar.</td></tr>
+        <tr><td><strong>"Fecha no válida"</strong></td><td>Formato de fecha incorrecto o fecha en el pasado.</td><td>Usa siempre formato DD/MM/AAAA. Las fechas deben ser futuras.</td></tr>
+        <tr><td><strong>"Conflicto de cobertura"</strong></td><td>Demasiadas personas del equipo ausentes simultáneamente.</td><td>Cambia las fechas o coordina con compañeros. El supervisor puede aprobar si lo considera justificado.</td></tr>
+        <tr><td><strong>"No se recibe email"</strong></td><td>El email llega a spam o la dirección está desactualizada.</td><td>Revisa carpeta de spam. Actualiza tu dirección en el sistema HR.</td></tr>
+        <tr><td><strong>"No encuentro la solicitud"</strong></td><td>Error en la búsqueda o solicitud muy reciente.</td><td>Usa filtros en "Ver Mis Solicitudes" (por estado, fecha, tipo). Si es muy nueva, recarga la página.</td></tr>
+        <tr><td><strong>"Botón Guardar deshabilitado"</strong></td><td>Faltan campos obligatorios o hay errores de validación.</td><td>Verifica que Fecha inicio, Fecha fin y Tipo de ausencia están completados.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>11.3 Aspectos críticos</h3>
+    <div class="callout callout-danger">
+      <span class="callout-icon">⚠</span>
+      <div class="callout-body">
+        <strong>No pasar por alto</strong>
+        <strong>1. Las vacaciones aprobadas SÍ descuentan saldo.</strong> Una vez aprobada, los días se descuentan inmediatamente. Debes cancelar antes si cambias de planes.<br><br>
+        <strong>2. No hay "rollover" automático.</strong> Si el 31 de diciembre tienes días disponibles, estos se pierden. Consulta con HR si hay opción de arrastre.<br><br>
+        <strong>3. No se pueden editar solicitudes enviadas.</strong> Si necesitas cambiar fechas, cancela la solicitud y crea una nueva.<br><br>
+        <strong>4. Los festivos varían por localización.</strong> El sistema usa el calendario de festivos del país/región de tu contrato.
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC 12 -->
+  <section id="sec12">
+    <div class="section-tag">12 — Resumen</div>
+    <h2>Resumen Ejecutivo</h2>
+    <div class="divider"></div>
+    <div class="exec-summary">
+      <h3>¿Qué es?</h3>
+      <p>Herramienta digital integrada en el ERP corporativo que automatiza la solicitud y aprobación de permisos de vacaciones. Reemplaza el proceso manual anterior y proporciona transparencia total sobre ausencias del equipo.</p>
+
+      <h3>¿Por qué existe?</h3>
+      <p>El proceso anterior requería formularios en papel, correos y seguimiento manual, generando retrasos y riesgo de errores. El nuevo sistema es 100% digital, automático y verificable. Los empleados obtienen aprobación en horas y la empresa dispone de trazabilidad completa.</p>
+
+      <h3>¿Cómo funciona? (5 pasos)</h3>
+      <ol>
+        <li>El empleado accede a ZVacaciones y hace clic en "Nueva Solicitud".</li>
+        <li>Introduce las fechas; el sistema calcula automáticamente los días hábiles.</li>
+        <li>Envía la solicitud; el supervisor recibe una notificación inmediata.</li>
+        <li>El supervisor aprueba o rechaza desde "Solicitudes Pendientes".</li>
+        <li>El empleado recibe confirmación por email al instante.</li>
+      </ol>
+
+      <h3>Valor aportado</h3>
+      <ul>
+        <li><span class="gold">Velocidad:</span> Aprobaciones en horas, no en días.</li>
+        <li><span class="gold">Transparencia:</span> Todos ven el calendario de ausencias del equipo.</li>
+        <li><span class="gold">Precisión:</span> Validación automática de disponibilidad y cobertura.</li>
+        <li><span class="gold">Auditoría:</span> Cada solicitud queda registrada sin ambigüedades.</li>
+        <li><span class="gold">Eficiencia:</span> HR ya no procesa solicitudes manualmente.</li>
+      </ul>
+
+      <h3>Regla de oro</h3>
+      <p>Solicita con anticipación (30 días es ideal), verifica que tienes saldo disponible, y coordina con tu supervisor <em>antes</em> de enviar la solicitud. El sistema es simple, pero la planificación es responsabilidad tuya.</p>
+
+      <p style="margin-top:24px;font-size:12px;color:#475569;border-top:1px solid #1E293B;padding-top:16px">Para incidencias: Recursos Humanos · ext. 2000 · hr@empresa.com · Última actualización: Junio 2026</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const links = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section[id], h3[id]');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      links.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector('.nav-link[href="#'+e.target.id+'"]');
+      if(active) active.classList.add('active');
+    }
+  });
+}, {rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
