@@ -82,6 +82,8 @@ const prompts = defineCollection({
     categoria: z.string(),
     descripcion: z.string(),
     tags: z.array(z.string()).default([]),
+    github: z.string().optional(),
+    demo: z.string().optional(),
   }),
 });
 

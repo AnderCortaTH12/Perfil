@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaTech × Meridian Bank — IA Conversacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F8F5F0;--bg2:#EDE9E3;--text:#1E1A16;--muted:#7C7269;
+  --accent:#C4581E;--primary:#243043;--border:#DDD8D0;
+  --white:#FFFFFF;--font-display:'Cormorant Garamond',serif;
+  --font-body:'DM Sans',sans-serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:var(--font-body);color:var(--text)}
+
+.deck{width:100vw;height:100vh;position:relative}
+.slide{
+  position:absolute;inset:0;display:none;
+  padding:64px 96px;flex-direction:column;
+  background:var(--bg);opacity:0;
+  transition:opacity 0.35s ease;
+}
+.slide.active{display:flex;opacity:1}
+
+/* SLIDE NUMBER */
+.sn{
+  position:absolute;top:28px;right:40px;
+  font-family:var(--font-body);font-size:12px;
+  color:var(--text);opacity:0.18;letter-spacing:0.12em;
+}
+/* PROGRESS */
+#progress{
+  position:fixed;bottom:0;left:0;height:2px;
+  background:var(--accent);transition:width 0.4s ease;z-index:200;
+}
+/* NAV */
+.nav{
+  position:fixed;bottom:28px;right:36px;
+  display:flex;gap:6px;z-index:200;
+}
+.nb{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--text);color:var(--bg);
+  border:none;cursor:pointer;font-size:15px;
+  opacity:0.12;transition:opacity 0.2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.nb:hover{opacity:0.9}
+
+/* TITLE SEPARATOR */
+.sep{width:40px;height:2px;background:var(--accent);margin:14px 0 28px}
+
+/* SIDE ACCENT */
+.inner{border-left:2.5px solid var(--accent);padding-left:44px;width:100%}
+
+/* ── LAYOUT: COVER ── */
+.s-cover{background:var(--primary);color:var(--white);justify-content:flex-end;padding:72px 96px}
+.s-cover .co-tag{
+  font-family:var(--font-body);font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;opacity:0.45;margin-bottom:48px;
+}
+.s-cover h1{
+  font-family:var(--font-display);font-size:76px;font-weight:600;
+  line-height:1.0;letter-spacing:-1px;margin-bottom:18px;
+}
+.s-cover .sub{
+  font-family:var(--font-body);font-size:20px;font-weight:300;
+  opacity:0.65;letter-spacing:0.04em;margin-bottom:64px;
+}
+.s-cover .logos{
+  display:flex;align-items:center;gap:20px;
+  font-family:var(--font-display);font-size:22px;font-weight:400;
+  opacity:0.5;
+}
+.s-cover .logos span{font-size:16px;opacity:0.4}
+.cover-geo{
+  position:absolute;right:-60px;top:-80px;
+  width:520px;height:520px;border-radius:50%;
+  background:rgba(196,88,30,0.07);pointer-events:none;
+}
+.cover-geo2{
+  position:absolute;right:80px;top:60px;
+  width:240px;height:240px;border-radius:50%;
+  background:rgba(196,88,30,0.05);pointer-events:none;
+}
+
+/* ── LAYOUT: HERO ── */
+.s-hero{
+  background:var(--accent);color:var(--white);
+  align-items:center;justify-content:center;text-align:center;
+}
+.s-hero .h-num{
+  font-family:var(--font-display);font-size:148px;font-weight:700;
+  line-height:1;letter-spacing:-4px;
+}
+.s-hero .h-label{
+  font-family:var(--font-body);font-size:20px;font-weight:300;
+  opacity:0.8;margin-top:16px;letter-spacing:0.06em;
+  text-transform:uppercase;
+}
+.s-hero .h-context{
+  font-size:15px;opacity:0.6;margin-top:10px;
+  max-width:480px;line-height:1.6;
+}
+.s-hero-dark{background:var(--primary)}
+.s-hero-neutral{
+  background:var(--bg);color:var(--text);
+  align-items:flex-start;justify-content:center;
+}
+.s-hero-neutral .h-num{color:var(--accent)}
+
+/* ── LAYOUT: SPLIT ── */
+.s-split .split-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;flex:1;width:100%;
+}
+.s-split h2{
+  font-family:var(--font-display);font-size:52px;font-weight:600;
+  line-height:1.1;margin-bottom:8px;letter-spacing:-0.5px;
+}
+.s-split .bullets{list-style:none;margin-top:28px}
+.s-split .bullets li{
+  font-size:17px;line-height:1.7;color:var(--muted);
+  padding:10px 0;border-bottom:0.5px solid var(--border);
+}
+.s-split .bullets li:last-child{border:none}
+.split-right-stat{
+  display:flex;flex-direction:column;align-items:flex-end;
+  text-align:right;
+}
+.big-stat{
+  font-family:var(--font-display);font-size:108px;font-weight:700;
+  line-height:1;color:var(--accent);letter-spacing:-3px;
+}
+.big-stat-label{
+  font-size:14px;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--muted);margin-top:10px;
+}
+.big-stat-ctx{
+  font-size:15px;color:var(--muted);margin-top:6px;
+  max-width:220px;line-height:1.5;
+}
+
+/* ── LAYOUT: KPI GRID ── */
+.s-kpi h2{
+  font-family:var(--font-display);font-size:52px;font-weight:600;
+  letter-spacing:-0.5px;margin-bottom:8px;
+}
+.kpi-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;flex:1;align-items:center;margin-top:16px;
+}
+.kpi-item{
+  padding:32px 24px 32px 0;
+  border-top:2px solid var(--accent);
+  margin-right:40px;
+}
+.kpi-item:last-child{margin-right:0}
+.kpi-v{
+  font-family:var(--font-display);font-size:64px;font-weight:700;
+  line-height:1;letter-spacing:-1px;margin-bottom:6px;
+}
+.kpi-l{
+  font-size:11px;font-weight:500;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--muted);margin-bottom:6px;
+}
+.kpi-c{font-size:14px;color:var(--muted);line-height:1.5}
+
+.kpi-grid-2{grid-template-columns:repeat(2,1fr)}
+.kpi-grid-2 .kpi-item{padding:40px 40px 40px 0;margin-right:60px}
+.kpi-grid-2 .kpi-v{font-size:80px}
+
+/* ── LAYOUT: CHART ── */
+.s-chart h2{
+  font-family:var(--font-display);font-size:44px;font-weight:600;
+  letter-spacing:-0.5px;margin-bottom:4px;
+}
+.chart-sub{font-size:15px;color:var(--muted);margin-bottom:32px}
+.chart-wrap{flex:1;position:relative;width:100%}
+.chart-insight{
+  font-size:13px;color:var(--muted);margin-top:14px;
+  letter-spacing:0.02em;
+}
+
+/* ── LAYOUT: TIMELINE ── */
+.s-tl h2{
+  font-family:var(--font-display);font-size:52px;font-weight:600;
+  letter-spacing:-0.5px;margin-bottom:8px;
+}
+.tl-wrap{
+  display:flex;gap:0;width:100%;flex:1;
+  align-items:flex-start;padding-top:48px;position:relative;
+}
+.tl-wrap::before{
+  content:'';position:absolute;top:12px;left:0;right:0;
+  height:1px;background:rgba(196,88,30,0.25);
+}
+.tl-phase{flex:1;padding-top:40px;position:relative;padding-right:32px}
+.tl-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--accent);position:absolute;top:7px;left:0;
+}
+.tl-tag{
+  font-size:11px;text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--accent);margin-bottom:10px;font-weight:500;
+}
+.tl-months{
+  font-size:13px;color:var(--muted);margin-bottom:12px;
+}
+.tl-title{font-size:19px;font-weight:500;margin-bottom:10px;line-height:1.3}
+.tl-desc{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ── LAYOUT: LIST EDITORIAL ── */
+.s-list h2{
+  font-family:var(--font-display);font-size:52px;font-weight:600;
+  letter-spacing:-0.5px;margin-bottom:8px;
+}
+.list-items{margin-top:24px;width:100%}
+.li-row{
+  display:flex;gap:36px;align-items:flex-start;
+  padding:22px 0;border-bottom:0.5px solid var(--border);
+}
+.li-row:first-child{border-top:0.5px solid var(--border)}
+.li-num{
+  font-family:var(--font-display);font-size:48px;font-weight:700;
+  opacity:0.12;line-height:1;min-width:44px;
+}
+.li-title{font-size:18px;font-weight:500;margin-bottom:5px}
+.li-desc{font-size:14px;color:var(--muted);line-height:1.6}
+.li-badge{
+  display:inline-block;font-size:11px;letter-spacing:0.08em;
+  text-transform:uppercase;color:var(--accent);
+  border:1px solid rgba(196,88,30,0.3);padding:3px 10px;
+  border-radius:2px;margin-bottom:6px;
+}
+
+/* ── CLOSING ── */
+.s-close{
+  background:var(--primary);color:var(--white);
+  align-items:center;justify-content:center;text-align:center;
+}
+.s-close h2{
+  font-family:var(--font-display);font-size:80px;font-weight:600;
+  letter-spacing:-2px;margin-bottom:16px;
+}
+.s-close .close-sub{
+  font-size:18px;font-weight:300;opacity:0.55;
+  letter-spacing:0.06em;margin-bottom:56px;
+}
+.s-close .contact{font-size:14px;opacity:0.4;line-height:2;letter-spacing:0.06em}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- SLIDE 1: COVER -->
+<div class="slide s-cover active">
+  <div class="cover-geo"></div>
+  <div class="cover-geo2"></div>
+  <div class="sn">1 / 12</div>
+  <div class="co-tag">Propuesta Estratégica · 2026</div>
+  <h1>Transformación de la Atención al Cliente mediante IA</h1>
+  <p class="sub">Plataforma Conversacional Multicanal · Propuesta de Implementación</p>
+  <div class="logos">
+    <span style="opacity:0.9;font-size:18px">NovaTech Consulting</span>
+    <span>→</span>
+    <span style="opacity:0.9;font-size:18px">Meridian Bank</span>
+  </div>
+</div>
+
+<!-- SLIDE 2: HERO STAT (hook) -->
+<div class="slide s-hero">
+  <div class="sn" style="color:#fff">2 / 12</div>
+  <div class="h-num">65%</div>
+  <div class="h-label">de consultas son repetitivas y de bajo valor</div>
+  <div class="h-context">Saldos, movimientos, bloqueos de tarjeta.<br>Resueltos hoy por agentes humanos en 9 minutos.</div>
+</div>
+
+<!-- SLIDE 3: SPLIT - El problema -->
+<div class="slide s-split">
+  <div class="sn">3 / 12</div>
+  <div class="inner" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="split-grid">
+      <div>
+        <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:12px">El Problema</p>
+        <h2>Meridian atiende 3,8M de consultas al mes</h2>
+        <div class="sep"></div>
+        <ul class="bullets">
+          <li>Tiempo medio de resolución: <strong>9,1 minutos</strong> con agente humano</li>
+          <li>NPS del canal de atención: <strong>29 puntos</strong> — por debajo del sector (37)</li>
+          <li>Coste operativo del canal: <strong>+14% interanual</strong> sin mejora de satisfacción</li>
+          <li>Agentes dedicados a consultas <strong>sin valor añadido</strong> el 65% de su tiempo</li>
+        </ul>
+      </div>
+      <div class="split-right-stat">
+        <div class="big-stat">29</div>
+        <div class="big-stat-label">NPS actual</div>
+        <div class="big-stat-ctx">8 puntos por debajo del promedio del sector bancario europeo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: KPI GRID - Situación actual -->
+<div class="slide s-kpi">
+  <div class="sn">4 / 12</div>
+  <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:8px">Situación actual · Meridian Bank</p>
+  <h2>Los números hablan por sí solos</h2>
+  <div class="sep"></div>
+  <div class="kpi-grid">
+    <div class="kpi-item">
+      <div class="kpi-l">Consultas / mes</div>
+      <div class="kpi-v">3,8M</div>
+      <div class="kpi-c">App, web, teléfono y WhatsApp</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-l">Tiempo resolución</div>
+      <div class="kpi-v">9,1'</div>
+      <div class="kpi-c">Media por consulta con agente humano</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-l">NPS atención</div>
+      <div class="kpi-v">29</div>
+      <div class="kpi-c">Sector: 37 pts. Gap de 8 puntos</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-l">Consultas repetitivas</div>
+      <div class="kpi-v">65%</div>
+      <div class="kpi-c">Automatizables sin pérdida de calidad</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: HERO - Transición solución -->
+<div class="slide s-hero s-hero-dark">
+  <div class="sn" style="color:#fff">5 / 12</div>
+  <div class="h-num" style="font-size:72px;letter-spacing:-2px;opacity:0.9">La solución</div>
+  <div class="h-label">IA Conversacional Multicanal</div>
+  <div class="h-context">Modelos de lenguaje de última generación integrados<br>con el core bancario de Meridian</div>
+</div>
+
+<!-- SLIDE 6: SPLIT - La propuesta -->
+<div class="slide s-split">
+  <div class="sn">6 / 12</div>
+  <div class="inner" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="split-grid">
+      <div>
+        <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:12px">La Propuesta</p>
+        <h2>Resolución autónoma del 72% de consultas</h2>
+        <div class="sep"></div>
+        <ul class="bullets">
+          <li>Disponible en <strong>app, web y WhatsApp</strong> desde el primer día</li>
+          <li>Integración con core bancario: contexto completo sin fricciones</li>
+          <li>Derivación inteligente a agente humano con <strong>historial cargado</strong></li>
+          <li>Aprendizaje continuo: mejora con cada interacción de Meridian</li>
+        </ul>
+      </div>
+      <div class="split-right-stat">
+        <div class="big-stat">72%</div>
+        <div class="big-stat-label">Automatización</div>
+        <div class="big-stat-ctx">Consultas resueltas sin intervención humana en los primeros 12 meses</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: CHART - Tiempo de resolución -->
+<div class="slide s-chart">
+  <div class="sn">7 / 12</div>
+  <div class="inner" style="flex:1;display:flex;flex-direction:column">
+    <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:8px">Impacto operativo</p>
+    <h2>El tiempo de resolución cae un 88% en todos los canales</h2>
+    <p class="chart-sub">Minutos por consulta: situación actual vs. con IA conversacional</p>
+    <div class="chart-wrap"><canvas id="timeChart"></canvas></div>
+    <p class="chart-insight">↑ De 9,1 minutos a menos de 1,1 minutos de media. El agente humano interviene solo en casos complejos, con contexto ya cargado.</p>
+  </div>
+</div>
+
+<!-- SLIDE 8: KPI GRID - Resultados esperados -->
+<div class="slide s-kpi">
+  <div class="sn">8 / 12</div>
+  <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:8px">Resultados · 16 meses</p>
+  <h2>El impacto en cuatro cifras</h2>
+  <div class="sep"></div>
+  <div class="kpi-grid kpi-grid-2" style="margin-top:32px">
+    <div class="kpi-item">
+      <div class="kpi-l">NPS estimado</div>
+      <div class="kpi-v" style="color:var(--accent)">47</div>
+      <div class="kpi-c">↑ 18 puntos vs. actual — por encima del sector</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-l">Reducción coste operativo</div>
+      <div class="kpi-v" style="color:var(--accent)">-31%</div>
+      <div class="kpi-c">En el canal de atención al cliente</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-l">Horas/año liberadas</div>
+      <div class="kpi-v" style="color:var(--accent)">2,4M</div>
+      <div class="kpi-c">Agentes redirigidos a casos de alto valor</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-l">ROI a 24 meses</div>
+      <div class="kpi-v" style="color:var(--accent)">280%</div>
+      <div class="kpi-c">Inversión total: 1,9M€ · Ahorro acumulado: 5,3M€</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: TIMELINE - Plan de ejecución -->
+<div class="slide s-tl">
+  <div class="sn">9 / 12</div>
+  <div class="inner" style="flex:1;display:flex;flex-direction:column">
+    <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:8px">Plan de ejecución</p>
+    <h2>16 meses. Tres fases. Cero disrupciones.</h2>
+    <div class="sep"></div>
+    <div class="tl-wrap">
+      <div class="tl-phase">
+        <div class="tl-dot"></div>
+        <div class="tl-tag">Fase 1</div>
+        <div class="tl-months">Meses 1 – 4</div>
+        <div class="tl-title">Auditoría y Piloto</div>
+        <div class="tl-desc">Análisis de las 500 consultas más frecuentes. Diseño del modelo conversacional. Piloto en app móvil con 10.000 usuarios reales.</div>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-dot"></div>
+        <div class="tl-tag">Fase 2</div>
+        <div class="tl-months">Meses 5 – 11</div>
+        <div class="tl-title">Despliegue Multicanal</div>
+        <div class="tl-desc">Expansión a web y WhatsApp. Integración completa con core bancario. Activación del módulo de derivación inteligente a agente.</div>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-dot"></div>
+        <div class="tl-tag">Fase 3</div>
+        <div class="tl-months">Meses 12 – 16</div>
+        <div class="tl-title">Optimización y Escala</div>
+        <div class="tl-desc">Fine-tuning continuo con datos reales de Meridian. Expansión a mercados internacionales. Medición de ROI y presentación de resultados.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: CHART - ROI -->
+<div class="slide s-chart">
+  <div class="sn">10 / 12</div>
+  <div class="inner" style="flex:1;display:flex;flex-direction:column">
+    <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:8px">Retorno de inversión</p>
+    <h2>El ahorro supera la inversión en el mes 14</h2>
+    <p class="chart-sub">Inversión acumulada vs. ahorro acumulado (€M) · 24 meses</p>
+    <div class="chart-wrap"><canvas id="roiChart"></canvas></div>
+    <p class="chart-insight">↑ Inversión total: 1,9M€ · Ahorro acumulado a 24 meses: 5,3M€ · ROI: 280%</p>
+  </div>
+</div>
+
+<!-- SLIDE 11: LIST - Track record -->
+<div class="slide s-list">
+  <div class="sn">11 / 12</div>
+  <div class="inner" style="flex:1;display:flex;flex-direction:column">
+    <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:8px">Track record NovaTech</p>
+    <h2>Tres implementaciones. Tres éxitos probados.</h2>
+    <div class="sep"></div>
+    <div class="list-items">
+      <div class="li-row">
+        <div class="li-num">1</div>
+        <div>
+          <div class="li-badge">Banca Retail · Europa Central</div>
+          <div class="li-title">Varda Bank — Automatización del 68% de consultas</div>
+          <div class="li-desc">Implantación en 8 meses. NPS: de 31 a 49 puntos. Reducción de costes operativos del 29%. 1,8M horas/año liberadas para gestión de patrimonio.</div>
+        </div>
+      </div>
+      <div class="li-row">
+        <div class="li-num">2</div>
+        <div>
+          <div class="li-badge">Banca Corporativa · MENA</div>
+          <div class="li-title">Ostia Financial — Plataforma multicanal en 6 idiomas</div>
+          <div class="li-desc">Despliegue en app, web y WhatsApp. Resolución autónoma del 74%. Tiempo medio: de 11,2 min a 1,3 min. ROI del 310% a 22 meses.</div>
+        </div>
+      </div>
+      <div class="li-row">
+        <div class="li-num">3</div>
+        <div>
+          <div class="li-badge">Banca Digital · Europa Occidental</div>
+          <div class="li-title">CoreBank Europa — Integración con core bancario legacy</div>
+          <div class="li-desc">Migración sin disrupciones sobre infraestructura de 20 años. Satisfacción del cliente: +22 puntos NPS. Primer banco 100% IA-first en atención al cliente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: CLOSING -->
+<div class="slide s-close">
+  <div class="sn" style="color:#fff">12 / 12</div>
+  <h2>¿Comenzamos?</h2>
+  <p class="close-sub">NovaTech está listo para iniciar la Fase 1 en enero de 2026</p>
+  <div class="contact">
+    EQUIPO FINANCIAL SERVICES AI · NOVATECH CONSULTING<br>
+    hello@novatech.ai · +34 91 000 0000<br>
+    Propuesta disponible para revisión y validación
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div id="progress"></div>
+<div class="nav">
+  <button class="nb" onclick="prev()">←</button>
+  <button class="nb" onclick="next()">→</button>
+</div>
+
+<script>
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const n = slides.length;
+
+function show(i){
+  slides.forEach(s => { s.classList.remove('active'); s.style.display='none'; });
+  slides[i].style.display='flex';
+  requestAnimationFrame(() => slides[i].classList.add('active'));
+  document.getElementById('progress').style.width = ((i+1)/n*100)+'%';
+}
+function next(){ cur=(cur+1)%n; show(cur); }
+function prev(){ cur=(cur-1+n)%n; show(cur); }
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') next();
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') prev();
+});
+show(0);
+
+// CHART 1: Tiempo de resolución (barras horizontales)
+const tc = document.getElementById('timeChart').getContext('2d');
+new Chart(tc, {
+  type:'bar',
+  data:{
+    labels:['App Móvil','Web','WhatsApp','Teléfono'],
+    datasets:[
+      {label:'Actual (min)',data:[8.6,9.4,9.8,8.7],
+       backgroundColor:'rgba(36,48,67,0.18)',borderWidth:0,borderRadius:4},
+      {label:'Con IA (min)',data:[1.0,1.1,1.2,1.1],
+       backgroundColor:'rgba(196,88,30,0.85)',borderWidth:0,borderRadius:4}
+    ]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'top',labels:{font:{family:'DM Sans',size:12},
+        color:'#7C7269',padding:20,usePointStyle:true}},
+      tooltip:{backgroundColor:'#1E1A16',titleFont:{family:'DM Sans'},
+        bodyFont:{family:'DM Sans'},padding:10,cornerRadius:4}
+    },
+    scales:{
+      x:{grid:{color:'rgba(0,0,0,0.04)'},border:{display:false},
+        ticks:{font:{family:'DM Sans',size:11},color:'#7C7269'},
+        max:11},
+      y:{grid:{display:false},border:{display:false},
+        ticks:{font:{family:'DM Sans',size:12},color:'#1E1A16'}}
+    }
+  }
+});
+
+// CHART 2: ROI (líneas)
+const rc = document.getElementById('roiChart').getContext('2d');
+new Chart(rc, {
+  type:'line',
+  data:{
+    labels:['M3','M5','M7','M9','M11','M13','M15','M17','M19','M21','M24'],
+    datasets:[
+      {label:'Inversión acumulada (€M)',
+       data:[0.42,0.85,1.25,1.55,1.75,1.90,1.90,1.90,1.90,1.90,1.90],
+       borderColor:'rgba(36,48,67,0.5)',backgroundColor:'rgba(36,48,67,0.04)',
+       borderWidth:2,pointRadius:3,tension:0.3,fill:true},
+      {label:'Ahorro acumulado (€M)',
+       data:[0,0.18,0.44,0.82,1.28,1.82,2.45,3.14,3.90,4.60,5.30],
+       borderColor:'rgba(196,88,30,0.9)',backgroundColor:'rgba(196,88,30,0.06)',
+       borderWidth:3,pointRadius:4,tension:0.3,fill:true}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'top',labels:{font:{family:'DM Sans',size:12},
+        color:'#7C7269',padding:20,usePointStyle:true}},
+      tooltip:{backgroundColor:'#1E1A16',titleFont:{family:'DM Sans'},
+        bodyFont:{family:'DM Sans'},padding:10,cornerRadius:4}
+    },
+    scales:{
+      x:{grid:{display:false},border:{display:false},
+        ticks:{font:{family:'DM Sans',size:11},color:'#7C7269'}},
+      y:{grid:{color:'rgba(0,0,0,0.04)'},border:{display:false},
+        ticks:{font:{family:'DM Sans',size:11},color:'#7C7269',
+          callback:v=>'€'+v.toFixed(1)+'M'}}
+    }
+  }
+});
+</script>
+</body>
+</html>
