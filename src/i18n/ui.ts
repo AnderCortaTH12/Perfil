@@ -14,7 +14,6 @@ export type Lang = keyof typeof languages;
 export const sections = [
   'proyectos-ia',
   'github',
-  'papers',
   'divulgacion',
   'prompts',
   'certificaciones',
@@ -36,14 +35,12 @@ export const ui = {
 
     'section.proyectos-ia': 'Proyectos de IA',
     'section.github': 'GitHub',
-    'section.papers': 'Papers',
     'section.divulgacion': 'Divulgación',
     'section.prompts': 'Prompts',
     'section.certificaciones': 'Certificaciones',
 
     'desc.proyectos-ia': 'Sistemas y agentes de IA, con su diagrama de flujo.',
     'desc.github': 'Repositorios destacados y código abierto.',
-    'desc.papers': 'Trabajos e investigación en economía.',
     'desc.divulgacion': 'Artículos de divulgación y opinión.',
     'desc.prompts': 'Prompts útiles, listos para copiar.',
     'desc.certificaciones': 'Formación y credenciales.',
@@ -91,14 +88,12 @@ export const ui = {
 
     'section.proyectos-ia': 'AI Projects',
     'section.github': 'GitHub',
-    'section.papers': 'Papers',
     'section.divulgacion': 'Writing',
     'section.prompts': 'Prompts',
     'section.certificaciones': 'Certifications',
 
     'desc.proyectos-ia': 'AI systems and agents, each with its flow diagram.',
     'desc.github': 'Featured repositories and open source.',
-    'desc.papers': 'Economics research and working papers.',
     'desc.divulgacion': 'Essays and opinion pieces.',
     'desc.prompts': 'Useful prompts, ready to copy.',
     'desc.certificaciones': 'Training and credentials.',

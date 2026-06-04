@@ -45,21 +45,6 @@ const github = defineCollection({
   }),
 });
 
-const papers = defineCollection({
-  loader: sectionLoader('papers'),
-  schema: z.object({
-    slug: z.string(),
-    idioma,
-    titulo: z.string(),
-    fecha: z.date(),
-    abstract: z.string(),
-    autores: z.array(z.string()).default([]),
-    publicacion: z.string().optional(),
-    pdf: z.string(),
-    enlace: z.string().optional(),
-  }),
-});
-
 const divulgacion = defineCollection({
   loader: sectionLoader('divulgacion'),
   schema: z.object({
@@ -70,6 +55,7 @@ const divulgacion = defineCollection({
     resumen: z.string(),
     tags: z.array(z.string()).default([]),
     imagen: z.string().optional(),
+    pdf: z.string().optional(),
   }),
 });
 
@@ -106,7 +92,6 @@ const certificaciones = defineCollection({
 export const collections = {
   'proyectos-ia': proyectosIa,
   github,
-  papers,
   divulgacion,
   prompts,
   certificaciones,

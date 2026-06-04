@@ -6,6 +6,7 @@ fecha: 2026-01-15
 resumen: "Análisis de cómo la captura de Nicolás Maduro en enero de 2026 se reflejó en los precios de bonos soberanos venezolanos, CDS y riesgo país, desde una perspectiva de aprendizaje sobre derivados financieros."
 tags: ["Venezuela", "Bonos soberanos", "CDS", "Derivados", "Riesgo país", "Economía"]
 imagen: ""
+pdf: "/Perfil/papers/venezuela-mercado.pdf"
 ---
 
 Los mercados financieros tienen una virtud incómoda: ponen precio a casi todo, incluida la

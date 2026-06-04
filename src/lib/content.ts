@@ -36,7 +36,7 @@ export type FeedItem = {
  * ordenados por fecha descendente con los `destacado` siempre primero.
  */
 export async function getFeed(lang: Lang, limit = 6): Promise<FeedItem[]> {
-  const secciones: Section[] = ['proyectos-ia', 'divulgacion', 'papers', 'certificaciones'];
+  const secciones: Section[] = ['proyectos-ia', 'divulgacion', 'certificaciones'];
   const all: FeedItem[] = [];
 
   for (const section of secciones) {

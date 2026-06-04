@@ -6,6 +6,7 @@ fecha: 2026-01-15
 resumen: "An analysis of how the capture of Nicolás Maduro in January 2026 was reflected in the prices of Venezuelan sovereign bonds, CDS and country risk, from the perspective of learning about financial derivatives."
 tags: ["Venezuela", "Sovereign bonds", "CDS", "Derivatives", "Country risk", "Economics"]
 imagen: ""
+pdf: "/Perfil/papers/venezuela-mercado.pdf"
 ---
 
 Financial markets have an uncomfortable virtue: they put a price on almost everything, including
