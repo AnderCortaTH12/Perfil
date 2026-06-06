@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe de Ventas 2025 — IKEA eCommerce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ───────────────────────── RESET & TOKENS ───────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:        #0058A3;
+  --blue-dk:     #00448C;
+  --blue-mid:    #1E6FBF;
+  --blue-lt:     #5A9FD4;
+  --blue-pale:   #B8D4EF;
+  --blue-ghost:  #E0EBF5;
+  --yellow:      #FFDA1A;
+  --yellow-dk:   #D4AC00;
+  --orange:      #E07B39;
+  --red:         #C8311B;
+  --red-lt:      #F5A090;
+  --green:       #1A7340;
+  --green-lt:    #9ADCB8;
+  --white:       #FFFFFF;
+  --bg:          #F4F4F2;
+  --text:        #111111;
+  --text-sec:    #555555;
+  --text-muted:  #888888;
+  --border:      #E2E2DF;
+  --radius:      3px;
+  --shadow-sm:   0 1px 4px rgba(0,0,0,0.07);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ───────────────────────── NAV ───────────────────────── */
+.nav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--blue);
+  display: flex; align-items: center;
+  padding: 0 36px; height: 52px; gap: 0;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.28);
+}
+
+.nav-logo {
+  background: var(--yellow);
+  color: var(--blue);
+  font-weight: 900; font-size: 15px;
+  letter-spacing: 3px; padding: 5px 14px;
+  text-decoration: none; border-radius: 2px;
+  margin-right: 28px; flex-shrink: 0;
+  transition: background .15s;
+}
+.nav-logo:hover { background: var(--yellow-dk); }
+
+.nav-links { display: flex; align-items: center; gap: 2px; flex: 1; }
+.nav-links a {
+  color: rgba(255,255,255,.72);
+  text-decoration: none; font-size: 12.5px; font-weight: 500;
+  padding: 6px 13px; border-radius: 2px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.nav-links a:hover { color: #fff; background: rgba(255,255,255,.1); }
+.nav-links a.active { color: var(--yellow); }
+
+.nav-meta {
+  font-size: 11px; color: rgba(255,255,255,.38);
+  letter-spacing: .5px; margin-left: auto; white-space: nowrap;
+}
+
+/* ───────────────────────── HERO ───────────────────────── */
+.hero { background: var(--blue); padding: 56px 0 0; overflow: hidden; }
+
+.hero-inner {
+  max-width: 1120px; margin: 0 auto;
+  padding: 0 36px 52px;
+}
+
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+}
+.hero-tag {
+  background: var(--yellow); color: var(--blue);
+  font-size: 10px; font-weight: 800; letter-spacing: 3px;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 2px;
+}
+.hero-date { font-size: 12px; color: rgba(255,255,255,.45); }
+
+.hero h1 {
+  font-size: 40px; font-weight: 800; color: #fff;
+  line-height: 1.1; margin-bottom: 6px; letter-spacing: -.5px;
+}
+.hero-desc { font-size: 15px; color: rgba(255,255,255,.55); margin-bottom: 48px; }
+
+/* KPI ROW */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 1px; background: rgba(255,255,255,.12);
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 40px;
+}
+.kpi {
+  background: rgba(255,255,255,.06);
+  padding: 22px 26px;
+  transition: background .2s;
+}
+.kpi:hover { background: rgba(255,255,255,.1); }
+.kpi-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: rgba(255,255,255,.48); margin-bottom: 8px;
+}
+.kpi-num {
+  font-size: 35px; font-weight: 800; color: #fff;
+  line-height: 1; margin-bottom: 5px; letter-spacing: -1px;
+}
+.kpi-num.yellow { color: var(--yellow); }
+.kpi-num.alert  { color: #FCA5A5; }
+.kpi-ctx { font-size: 12px; color: rgba(255,255,255,.42); }
+
+/* FINDINGS BLOCK */
+.exec-findings {
+  background: rgba(255,218,26,.08);
+  border: 1px solid rgba(255,218,26,.22);
+  border-left: 4px solid var(--yellow);
+  border-radius: var(--radius); padding: 24px 28px;
+}
+.findings-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--yellow); margin-bottom: 14px;
+}
+.findings-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px 40px;
+}
+.finding {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13.5px; color: rgba(255,255,255,.88); line-height: 1.5;
+}
+.arrow { color: var(--yellow); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+
+/* HERO ACCENT STRIPE */
+.hero-stripe {
+  height: 6px;
+  background: linear-gradient(90deg, var(--yellow) 0%, var(--yellow-dk) 100%);
+}
+
+/* ───────────────────────── MAIN LAYOUT ───────────────────────── */
+.main {
+  max-width: 1120px; margin: 0 auto;
+  padding: 52px 36px 72px;
+}
+
+/* ───────────────────────── REPORT SECTION ───────────────────────── */
+.rsec { margin-bottom: 72px; }
+
+.sec-header {
+  display: flex; align-items: flex-start;
+  gap: 14px; margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 2.5px solid var(--blue);
+}
+.sec-badge {
+  background: var(--blue); color: #fff;
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  padding: 5px 10px; border-radius: 2px; flex-shrink: 0; margin-top: 4px;
+}
+.sec-ttl-block h2 {
+  font-size: 22px; font-weight: 700; line-height: 1.2; margin-bottom: 3px;
+}
+.sec-ttl-block p { font-size: 13px; color: var(--text-muted); }
+
+/* ───────────────────────── CARD ───────────────────────── */
+.card {
+  background: var(--white); border-radius: var(--radius);
+  padding: 28px 32px; box-shadow: var(--shadow-sm);
+  margin-bottom: 20px; border: 1px solid var(--border);
+}
+
+.chart-ttl { font-size: 16px; font-weight: 700; line-height: 1.35; margin-bottom: 4px; }
+.chart-src { font-size: 12px; color: var(--text-muted); font-style: italic; margin-bottom: 18px; }
+
+.legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; }
+.leg-item   { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-sec); }
+.leg-dot    { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.leg-bar    { width: 14px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+.chart-wrap { position: relative; width: 100%; }
+
+.insight {
+  margin-top: 18px; padding: 12px 16px;
+  background: var(--blue-ghost);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 13px; color: var(--blue-dk); line-height: 1.65;
+}
+.insight strong { font-weight: 700; color: var(--blue); }
+
+/* ───────────────────────── GRIDS ───────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-2 .card { margin-bottom: 0; }
+
+/* ───────────────────────── RECO CARDS ───────────────────────── */
+.reco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.reco-card {
+  background: var(--white); border-radius: var(--radius);
+  padding: 26px 28px; box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--blue);
+}
+.reco-card:nth-child(1) { border-top-color: var(--blue); }
+.reco-card:nth-child(2) { border-top-color: var(--blue-mid); }
+.reco-card:nth-child(3) { border-top-color: var(--blue-lt); }
+.reco-card:nth-child(4) { border-top-color: var(--blue-pale); }
+
+.reco-num  { font-size: 10.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.reco-ttl  { font-size: 15px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; }
+.reco-body { font-size: 13px; color: var(--text-sec); line-height: 1.72; margin-bottom: 14px; }
+.reco-tag  {
+  display: inline-block; background: var(--blue-ghost); color: var(--blue-dk);
+  font-size: 11px; font-weight: 600; padding: 3px 10px;
+  border-radius: 20px; letter-spacing: .3px;
+}
+
+/* ───────────────────────── FOOTER ───────────────────────── */
+.footer {
+  background: var(--blue);
+  padding: 22px 36px; text-align: center;
+}
+.footer p { font-size: 12px; color: rgba(255,255,255,.44); }
+.footer strong { color: rgba(255,255,255,.8); }
+
+/* ───────────────────────── PRINT ───────────────────────── */
+@media print {
+  .nav { display: none; }
+  .hero { padding-top: 20px; }
+  .card { box-shadow: none; border: 1px solid #ddd; }
+  .rsec { page-break-inside: avoid; }
+  body  { background: #fff; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+<nav class="nav">
+  <a href="#resumen" class="nav-logo">IKEA</a>
+  <div class="nav-links">
+    <a href="#resumen"    id="nl-resumen">Resumen Ejecutivo</a>
+    <a href="#evolucion"  id="nl-evolucion">Evolución</a>
+    <a href="#categorias" id="nl-categorias">Categorías</a>
+    <a href="#canales"    id="nl-canales">Canales &amp; Regiones</a>
+    <a href="#calidad"    id="nl-calidad">Calidad &amp; Recomendaciones</a>
+  </div>
+  <span class="nav-meta">Año fiscal 2025 · Confidencial</span>
+</nav>
+
+<!-- ═══════════════════════ SECCIÓN 1 — RESUMEN EJECUTIVO ═══════════════════════ -->
+<section id="resumen" class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-eyebrow">
+      <span class="hero-tag">Informe Ejecutivo</span>
+      <span class="hero-date">Año fiscal 2025 · eCommerce España · Comité de Dirección</span>
+    </div>
+
+    <h1>Evaluación de<br>Ventas 2025</h1>
+    <p class="hero-desc">11.181 pedidos analizados · 1 de enero – 31 de diciembre de 2025</p>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-label">Ventas totales</div>
+        <div class="kpi-num">€1,27M</div>
+        <div class="kpi-ctx">11.181 pedidos en el año</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Margen bruto</div>
+        <div class="kpi-num yellow">30,4%</div>
+        <div class="kpi-ctx">€385.564 de margen total</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Ticket medio</div>
+        <div class="kpi-num">€113</div>
+        <div class="kpi-ctx">Idéntico en Empresa y Particular</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Tasa devolución</div>
+        <div class="kpi-num alert">8,5%</div>
+        <div class="kpi-ctx">Concentrada en Electrónica y Moda</div>
+      </div>
+    </div>
+
+    <div class="exec-findings">
+      <div class="findings-label">4 Hallazgos Clave</div>
+      <div class="findings-grid">
+        <div class="finding">
+          <span class="arrow">→</span>
+          <span>Las ventas de <strong>julio-agosto caen un 34%</strong> respecto al promedio del H1 (€101,7K → €67K/mes)</span>
+        </div>
+        <div class="finding">
+          <span class="arrow">→</span>
+          <span><strong>Noviembre-diciembre concentran el 26%</strong> de la facturación anual — dependencia crítica de Q4</span>
+        </div>
+        <div class="finding">
+          <span class="arrow">→</span>
+          <span>Electrónica genera el <strong>42% de ventas pero solo el 22% de margen</strong> — Moda rinde al 50%</span>
+        </div>
+        <div class="finding">
+          <span class="arrow">→</span>
+          <span>Electrónica y Moda acumulan devoluciones de <strong>13% y 12%</strong>, tres veces más que el resto del catálogo</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="hero-stripe"></div>
+</section>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main class="main">
+
+  <!-- ─────── SECCIÓN 2 — EVOLUCIÓN ─────── -->
+  <section id="evolucion" class="rsec">
+    <div class="sec-header">
+      <span class="sec-badge">02</span>
+      <div class="sec-ttl-block">
+        <h2>Evolución de ventas 2025</h2>
+        <p>Ventas mensuales, patrones estacionales y concentración temporal del negocio</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="chart-ttl">El negocio opera en tres velocidades: estabilidad en H1, colapso en verano y explosión en Q4</div>
+      <div class="chart-src">Ventas mensuales (€) · Enero – Diciembre 2025</div>
+      <div class="legend-row">
+        <div class="leg-item"><div class="leg-dot" style="background:var(--blue)"></div><span>Mes estándar</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--orange)"></div><span>Caída verano (jul-ago, –34%)</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--yellow-dk)"></div><span>Pico Q4 (nov-dic, +55%)</span></div>
+      </div>
+      <div class="chart-wrap" style="height:300px">
+        <canvas id="cEvolucion"></canvas>
+      </div>
+      <div class="insight">
+        <strong>Lectura clave:</strong> El H1 (ene-jun) mantiene una media de €101.7K/mes con relativa estabilidad. Julio-agosto se hunden hasta €67K/mes (–34%), probablemente por comportamiento vacacional. El Q4 compensa con creces: noviembre y diciembre concentran €329K — el 26% de la facturación anual. Esta dependencia de dos meses implica riesgo operativo y de liquidez significativo; cualquier incidencia logística en Q4 erosionaría un cuarto del negocio.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── SECCIÓN 3 — CATEGORÍAS ─────── -->
+  <section id="categorias" class="rsec">
+    <div class="sec-header">
+      <span class="sec-badge">03</span>
+      <div class="sec-ttl-block">
+        <h2>Mix de categorías: el dilema volumen/margen</h2>
+        <p>Distribución de ventas y rentabilidad por línea de producto</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="chart-ttl">Electrónica mueve el 42% de las ventas al margen más bajo del catálogo — Moda hace lo contrario</div>
+      <div class="chart-src">Ventas totales (€, barras) y margen bruto % (línea) por categoría · 2025</div>
+      <div class="legend-row">
+        <div class="leg-item"><div class="leg-bar" style="background:var(--blue)"></div><span>Ventas (eje izquierdo)</span></div>
+        <div class="leg-item"><div class="leg-bar" style="background:var(--red-lt)"></div><span>Electrónica — anomalía de margen</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--yellow-dk)"></div><span>Margen bruto % (eje derecho)</span></div>
+      </div>
+      <div class="chart-wrap" style="height:340px">
+        <canvas id="cCategorias"></canvas>
+      </div>
+      <div class="insight">
+        <strong>La trampa del volumen:</strong> Electrónica lidera en ventas (€533K, 3.064 pedidos) pero opera al margen más bajo del catálogo (22%). Por contra, Moda —con menos de un tercio de sus ventas— genera €68K de margen bruto al 50%, casi idéntico al de Hogar (€67K) con muchos más pedidos. Cada euro vendido en Moda genera el doble de margen que en Electrónica. Redirigir el mix hacia Moda y Deporte (40%) mejoraría la rentabilidad sin crecimiento adicional en volumen.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── SECCIÓN 4 — CANALES Y REGIONES ─────── -->
+  <section id="canales" class="rsec">
+    <div class="sec-header">
+      <span class="sec-badge">04</span>
+      <div class="sec-ttl-block">
+        <h2>Canales de venta y distribución geográfica</h2>
+        <p>Dónde se genera el volumen y qué territorios tienen mayor potencial de crecimiento</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="chart-ttl">Web y App móvil concentran el 66% de las ventas</div>
+        <div class="chart-src">Ventas por canal (€) · 2025</div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="cCanales"></canvas>
+        </div>
+        <div class="insight">
+          El canal digital lidera. El margen es prácticamente idéntico en todos los canales (~30%), lo que implica que la palanca de mejora está en el crecimiento de volumen digital, no en la optimización de rentabilidad por canal.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="chart-ttl">Madrid y Cataluña generan el 53% de los ingresos</div>
+        <div class="chart-src">Ventas por región (€) · 2025</div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="cRegiones"></canvas>
+        </div>
+        <div class="insight">
+          Galicia (€99,5K) y País Vasco (€124K) presentan el mayor potencial relativo de crecimiento: márgenes equivalentes al promedio nacional (30,5%) con penetración muy por debajo de Madrid o Cataluña.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── SECCIÓN 5 — CALIDAD Y RECOMENDACIONES ─────── -->
+  <section id="calidad" class="rsec">
+    <div class="sec-header">
+      <span class="sec-badge">05</span>
+      <div class="sec-ttl-block">
+        <h2>Calidad del negocio y recomendaciones</h2>
+        <p>Indicadores de experiencia de cliente y próximos pasos priorizados</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:28px">
+      <div class="chart-ttl">Electrónica y Moda triplican la tasa de devoluciones del resto del catálogo</div>
+      <div class="chart-src">Tasa de devolución por categoría (%) · Media general: 8,5% · 2025</div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="cDevoluciones"></canvas>
+      </div>
+      <div class="insight">
+        <strong>Doble impacto:</strong> Electrónica (13,1%) y Moda (11,9%) tienen tasas que triplican a Hogar, Oficina y Deporte (~4-5%). Cada devolución erosiona el margen dos veces — pierde la venta y genera coste de gestión logístico. En Electrónica, cuyo margen ya es del 22%, el impacto neto es severo. Reducir la tasa de Electrónica del 13% al 8% liberaría un margen estimado de <strong>€12–15K anuales adicionales</strong>.
+      </div>
+    </div>
+
+    <!-- RECOMENDACIONES -->
+    <div class="reco-grid">
+      <div class="reco-card">
+        <div class="reco-num">Prioridad 01 — Margen</div>
+        <div class="reco-ttl">Rebalancear el mix de ventas hacia categorías de alto margen</div>
+        <div class="reco-body">Moda (50% margen) y Deporte (40%) están infraexplotados frente a Electrónica (22%). Diseñar campañas de impulso en estas categorías —sin reducir el volumen de Electrónica— mejoraría el margen global sin necesidad de crecer en ventas brutas. El potencial es inmediato: un punto porcentual de mix ganado en Moda equivale a varios puntos de margen absoluto.</div>
+        <span class="reco-tag">Categorías · Mix de producto</span>
+      </div>
+
+      <div class="reco-card">
+        <div class="reco-num">Prioridad 02 — Estacionalidad</div>
+        <div class="reco-ttl">Activar campañas específicas de verano para reducir la caída del 34%</div>
+        <div class="reco-body">Julio-agosto presentan un gap de ~€34K/mes frente al promedio semestral. Una campaña dedicada (hogar, deporte, outdoor) mitigaría la caída estacional y reduciría la dependencia de Q4. Concentrar el 26% de la facturación en dos meses expone el negocio a riesgos logísticos, de stock y de liquidez que son evitables con una planificación estacional activa.</div>
+        <span class="reco-tag">Marketing · Planificación estacional</span>
+      </div>
+
+      <div class="reco-card">
+        <div class="reco-num">Prioridad 03 — Devoluciones</div>
+        <div class="reco-ttl">Reducir la tasa de devolución en Electrónica y Moda</div>
+        <div class="reco-body">Auditar las causas raíz en ambas categorías. En Electrónica: mejorar fichas de producto, guías de compatibilidad y especificaciones técnicas precisas. En Moda: implantar tablas de tallas detalladas y fotografía de producto realista. Reducir Electrónica del 13% al 8% liberaría un estimado de €12–15K de margen recuperado anualmente, además de mejorar la satisfacción del cliente.</div>
+        <span class="reco-tag">Operaciones · Experiencia de producto</span>
+      </div>
+
+      <div class="reco-card">
+        <div class="reco-num">Prioridad 04 — Crecimiento</div>
+        <div class="reco-ttl">Invertir en Galicia y País Vasco como mercados de crecimiento</div>
+        <div class="reco-body">Ambas regiones registran márgenes equivalentes al promedio nacional (30,5%) pero con un volumen muy inferior al de Madrid y Cataluña. Una inversión focalizada en captación local —campañas geográficas segmentadas, mejora de plazos de envío— tiene bajo coste marginal y potencial de crecimiento no explotado frente a los mercados maduros del centro y noreste.</div>
+        <span class="reco-tag">Expansión geográfica · Captación</span>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="footer">
+  <p><strong>IKEA eCommerce · Informe de Ventas 2025</strong> · Fuente: base de datos transaccional · 11.181 pedidos (01/01/2025 – 31/12/2025) · Documento confidencial — uso exclusivo Comité de Dirección</p>
+</footer>
+
+<!-- ═══════════════════════ CHARTS ═══════════════════════ -->
+<script>
+Chart.defaults.font.family = "'Noto Sans', sans-serif";
+Chart.defaults.font.size   = 12;
+Chart.defaults.color       = '#888888';
+
+const C = {
+  blue:    '#0058A3', blueDk:  '#00448C', blueMid: '#1E6FBF',
+  blueLt:  '#5A9FD4', bluePale:'#B8D4EF', blueGhost:'#E0EBF5',
+  yellow:  '#FFDA1A', yellowDk:'#D4AC00',
+  orange:  '#E07B39', orangeDk:'#B85E20',
+  red:     '#C8311B', redLt:   '#F5A090',
+  green:   '#1A7340', greenLt: '#9ADCB8',
+  gray:    '#D1D5DB', grayDk:  '#6B7280',
+};
+
+/* ─── CHART 1 — Monthly Evolution (Line) ─── */
+(function () {
+  const ctx  = document.getElementById('cEvolucion').getContext('2d');
+  const data = [103956, 87265, 111616, 102380, 102931, 102253,
+                65084,  69002,  99568,  96289, 163911, 165126];
+  const lbls = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  const grad = ctx.createLinearGradient(0, 0, 0, 280);
+  grad.addColorStop(0, 'rgba(0,88,163,.20)');
+  grad.addColorStop(1, 'rgba(0,88,163,.01)');
+
+  const ptColor = lbls.map((_,i) =>
+    (i===6||i===7) ? C.orange : (i===10||i===11) ? C.yellowDk : C.blue
+  );
+  const ptSize = lbls.map((_,i) =>
+    (i===6||i===7||i===10||i===11) ? 8 : 5
+  );
+  const ptBorder = ptColor.map(c => c === C.blue ? C.blue : '#fff');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: { labels: lbls, datasets: [{
+      data, borderColor: C.blue, borderWidth: 2.5,
+      backgroundColor: grad, fill: true, tension: 0.38,
+      pointBackgroundColor: ptColor, pointBorderColor: ptBorder,
+      pointBorderWidth: 2, pointRadius: ptSize, pointHoverRadius: 9
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { padding: 10, callbacks: { label: c => ` €${c.parsed.y.toLocaleString('es-ES')}` } }
+      },
+      scales: {
+        x: { grid: { display: false }, border: { display: false } },
+        y: {
+          min: 40000,
+          grid: { color: '#EEEEEC', lineWidth: 1 },
+          border: { display: false },
+          ticks: { callback: v => `€${(v/1000).toFixed(0)}K`, font: { size: 11 } }
+        }
+      }
+    }
+  });
+})();
+
+/* ─── CHART 2 — Categories (Bar + Line) ─── */
+(function () {
+  const ctx  = document.getElementById('cCategorias').getContext('2d');
+  const cats = ['Electrónica','Oficina','Hogar','Moda','Deporte'];
+  const sales   = [533551, 301339, 192418, 136061, 106013];
+  const margins = [22, 30, 35, 50, 40];
+
+  const barFill   = [C.redLt + 'DD', C.blue, C.blue, C.yellow, C.blueLt];
+  const barBorder = [C.red,          C.blueDk, C.blueDk, C.yellowDk, C.blueMid];
+  const ptFill    = [C.red, C.grayDk, C.grayDk, C.yellowDk, C.grayDk];
+
+  new Chart(ctx, {
+    data: { labels: cats, datasets: [
+      {
+        type: 'bar', label: 'Ventas (€)',
+        data: sales,
+        backgroundColor: barFill, borderColor: barBorder,
+        borderWidth: 1, borderRadius: 3,
+        yAxisID: 'ySales', order: 2
+      },
+      {
+        type: 'line', label: 'Margen bruto (%)',
+        data: margins,
+        borderColor: C.yellowDk, borderWidth: 2.5,
+        backgroundColor: 'transparent',
+        pointBackgroundColor: ptFill,
+        pointBorderColor: '#fff', pointBorderWidth: 2,
+        pointRadius: 7, pointHoverRadius: 9,
+        tension: 0.3, yAxisID: 'yMargin', order: 1
+      }
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { padding: 10, callbacks: { label: c =>
+          c.dataset.yAxisID === 'ySales'
+            ? ` Ventas: €${c.parsed.y.toLocaleString('es-ES')}`
+            : ` Margen: ${c.parsed.y}%`
+        }}
+      },
+      scales: {
+        x: { grid: { display: false }, border: { display: false } },
+        ySales: {
+          type: 'linear', position: 'left',
+          grid: { color: '#EEEEEC' }, border: { display: false },
+          ticks: { callback: v => `€${(v/1000).toFixed(0)}K`, font: { size: 11 } }
+        },
+        yMargin: {
+          type: 'linear', position: 'right',
+          min: 0, max: 65,
+          grid: { display: false }, border: { display: false },
+          ticks: { callback: v => `${v}%`, font: { size: 11 } }
+        }
+      }
+    }
+  });
+})();
+
+/* ─── CHART 3 — Channels (Horizontal Bar) ─── */
+(function () {
+  const ctx = document.getElementById('cCanales').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Web','App móvil','Marketplace','Tienda física'],
+      datasets: [{
+        data: [458069, 373979, 248551, 188781],
+        backgroundColor: [C.blue, C.blueMid, C.blueLt, C.bluePale],
+        borderColor:     [C.blueDk, C.blue,   C.blueMid, C.blueLt],
+        borderWidth: 1, borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { padding: 10, callbacks: { label: c => ` €${c.parsed.x.toLocaleString('es-ES')}` }}
+      },
+      scales: {
+        x: { grid: { color: '#EEEEEC' }, border: { display: false },
+             ticks: { callback: v => `€${(v/1000).toFixed(0)}K`, font: { size: 11 } }},
+        y: { grid: { display: false }, border: { display: false },
+             ticks: { font: { size: 12 } }}
+      }
+    }
+  });
+})();
+
+/* ─── CHART 4 — Regions (Horizontal Bar) ─── */
+(function () {
+  const ctx = document.getElementById('cRegiones').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Madrid','Cataluña','Andalucía','Valencia','País Vasco','Galicia'],
+      datasets: [{
+        data: [355921, 315288, 203142, 171259, 124263, 99508],
+        backgroundColor: [C.blue, C.blue, C.blueMid, C.blueLt, C.bluePale, C.bluePale],
+        borderColor:     [C.blueDk,C.blueDk,C.blue, C.blueMid,C.blueLt,  C.blueLt],
+        borderWidth: 1, borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { padding: 10, callbacks: { label: c => ` €${c.parsed.x.toLocaleString('es-ES')}` }}
+      },
+      scales: {
+        x: { grid: { color: '#EEEEEC' }, border: { display: false },
+             ticks: { callback: v => `€${(v/1000).toFixed(0)}K`, font: { size: 11 } }},
+        y: { grid: { display: false }, border: { display: false },
+             ticks: { font: { size: 12 } }}
+      }
+    }
+  });
+})();
+
+/* ─── CHART 5 — Returns by Category (Bar + avg line) ─── */
+(function () {
+  const ctx = document.getElementById('cDevoluciones').getContext('2d');
+  new Chart(ctx, {
+    data: {
+      labels: ['Electrónica','Moda','Hogar','Oficina','Deporte'],
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Tasa devolución (%)',
+          data: [13.1, 11.9, 4.9, 4.5, 4.4],
+          backgroundColor: [C.red, C.red+'99', C.greenLt, C.greenLt, C.greenLt],
+          borderColor:     [C.red, C.red,      C.green,   C.green,   C.green],
+          borderWidth: 1, borderRadius: 3, yAxisID: 'y', order: 2
+        },
+        {
+          type: 'line',
+          label: 'Media (8,5%)',
+          data: [8.5, 8.5, 8.5, 8.5, 8.5],
+          borderColor: C.grayDk, borderWidth: 1.5,
+          borderDash: [5, 4],
+          backgroundColor: 'transparent',
+          pointRadius: 0, pointHoverRadius: 0,
+          yAxisID: 'y', order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true, position: 'top', align: 'end',
+          labels: { boxWidth: 20, padding: 14, font: { size: 11 } }
+        },
+        tooltip: { padding: 10, callbacks: { label: c =>
+          c.datasetIndex === 0 ? ` Devoluciones: ${c.parsed.y}%` : ` Media: ${c.parsed.y}%`
+        }}
+      },
+      scales: {
+        x: { grid: { display: false }, border: { display: false },
+             ticks: { font: { size: 12 } }},
+        y: {
+          min: 0, max: 17,
+          grid: { color: '#EEEEEC' }, border: { display: false },
+          ticks: { callback: v => `${v}%`, font: { size: 11 } }
+        }
+      }
+    }
+  });
+})();
+
+/* ─── ACTIVE NAV ON SCROLL ─── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+      });
+    }
+  });
+}, { threshold: 0.25, rootMargin: '-50px 0px -55% 0px' });
+sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
