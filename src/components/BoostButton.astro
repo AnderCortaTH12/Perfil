@@ -152,6 +152,18 @@ const t = useTranslations(lang);
 
     applyCounts(counts);
     renderTop(cards, counts, section);
+    sortByBoosts(cards, counts);
+  }
+
+  function sortByBoosts(cards: HTMLElement[], counts: Counts) {
+    const grid = document.querySelector<HTMLElement>('[data-sort-boosts]');
+    if (!grid) return;
+    const sorted = [...cards].sort((a, b) => {
+      const na = counts[a.dataset.slug ?? ''] ?? 0;
+      const nb = counts[b.dataset.slug ?? ''] ?? 0;
+      return nb - na;
+    });
+    sorted.forEach((card) => grid.appendChild(card));
   }
 
   function wireClicks() {

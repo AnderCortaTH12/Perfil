@@ -26,7 +26,7 @@ const labels = {
       items.length === 0 ? (
         <p class="text-muted">{t('list.empty')}</p>
       ) : (
-        <div class="grid gap-5 md:grid-cols-2">
+        <div class="grid gap-5 md:grid-cols-2" data-sort-boosts>
           {items.map((p) => (
             <div
               class="relative flex flex-col"
@@ -54,7 +54,7 @@ const labels = {
                   </ul>
                 )}
 
-                <div class="mt-5 flex items-center justify-between gap-3 pt-1">
+                <div class="mt-auto flex items-center justify-between gap-3 pt-5">
                   <div class="flex flex-wrap gap-3">
                     {p.data.demo && (
                       <button
@@ -101,6 +101,7 @@ const labels = {
     <iframe
       id="demo-frame"
       title={labels.demo}
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
       style="width: 100%; height: 100%; border: none;"
     ></iframe>
   </div>
@@ -135,6 +136,8 @@ const labels = {
   closeBtn?.addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+      e.preventDefault();
+      e.stopPropagation();
       closeModal();
     }
   });
