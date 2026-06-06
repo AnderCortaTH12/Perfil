@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageIntro from '../components/PageIntro.astro';
+import BoostButton from '../components/BoostButton.astro';
+import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 import { getItems } from '../lib/content';
 
@@ -17,6 +19,8 @@ const labels = {
 <Layout lang={lang} title={t('section.prompts')} description={t('desc.prompts')}>
   <PageIntro title={t('section.prompts')} description={t('desc.prompts')} />
 
+  <TopBoosts lang={lang} section="prompts" />
+
   <section class="mx-auto max-w-5xl px-6 pb-16">
     {
       items.length === 0 ? (
@@ -24,47 +28,58 @@ const labels = {
       ) : (
         <div class="grid gap-5 md:grid-cols-2">
           {items.map((p) => (
-            <article class="flex flex-col rounded-xl border border-line bg-white/50 p-6">
-              {p.data.categoria && (
-                <span class="text-xs uppercase tracking-wider text-accent">
-                  {p.data.categoria}
-                </span>
-              )}
-              <h2 class="mt-1 font-serif text-xl">{p.data.titulo}</h2>
-              <p class="mt-2 text-sm text-muted">{p.data.descripcion}</p>
-
-              {p.data.tags.length > 0 && (
-                <ul class="mt-4 flex flex-wrap gap-1.5">
-                  {p.data.tags.map((tag) => (
-                    <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">
-                      #{tag}
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              <div class="mt-5 flex flex-wrap gap-3 pt-1">
-                {p.data.demo && (
-                  <button
-                    type="button"
-                    class="demo-trigger rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white transition hover:opacity-90"
-                    data-demo={p.data.demo}
-                  >
-                    {labels.demo}
-                  </button>
+            <div
+              class="relative flex flex-col"
+              data-boost-card
+              data-slug={p.data.slug}
+              data-section="prompts"
+              data-title={p.data.titulo}
+            >
+              <article class="flex flex-col rounded-xl border border-line bg-white/50 p-6">
+                {p.data.categoria && (
+                  <span class="text-xs uppercase tracking-wider text-accent">
+                    {p.data.categoria}
+                  </span>
                 )}
-                {p.data.github && (
-                  <a
-                    href={p.data.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="rounded-full border border-line px-4 py-1.5 text-sm font-medium text-muted transition hover:text-accent"
-                  >
-                    {labels.github}
-                  </a>
+                <h2 class="mt-1 font-serif text-xl">{p.data.titulo}</h2>
+                <p class="mt-2 text-sm text-muted">{p.data.descripcion}</p>
+
+                {p.data.tags.length > 0 && (
+                  <ul class="mt-4 flex flex-wrap gap-1.5">
+                    {p.data.tags.map((tag) => (
+                      <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">
+                        #{tag}
+                      </li>
+                    ))}
+                  </ul>
                 )}
+
+                <div class="mt-5 flex flex-wrap gap-3 pt-1">
+                  {p.data.demo && (
+                    <button
+                      type="button"
+                      class="demo-trigger rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white transition hover:opacity-90"
+                      data-demo={p.data.demo}
+                    >
+                      {labels.demo}
+                    </button>
+                  )}
+                  {p.data.github && (
+                    <a
+                      href={p.data.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="rounded-full border border-line px-4 py-1.5 text-sm font-medium text-muted transition hover:text-accent"
+                    >
+                      {labels.github}
+                    </a>
+                  )}
+                </div>
+              </article>
+              <div class="mt-2 flex justify-end">
+                <BoostButton lang={lang} slug={p.data.slug} section="prompts" />
               </div>
-            </article>
+            </div>
           ))}
         </div>
       )

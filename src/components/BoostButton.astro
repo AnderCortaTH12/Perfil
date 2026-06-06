@@ -11,23 +11,53 @@ const { lang, slug, section } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<button
-  type="button"
-  class="boost-btn inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1 text-sm text-muted transition hover:border-accent hover:text-accent"
-  data-slug={slug}
-  data-section={section}
-  title={t('boost.title')}
-  aria-label={t('boost.label')}
->
-  <span aria-hidden="true">▲</span>
-  <span class="boost-count tabular-nums">·</span>
-</button>
+<div class="boost-wrapper inline-flex flex-col items-end gap-1">
+  <button
+    type="button"
+    class="boost-btn inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1 text-sm text-muted transition hover:border-accent hover:text-accent"
+    data-slug={slug}
+    data-section={section}
+    data-lang={lang}
+    title={t('boost.title')}
+    aria-label={t('boost.label')}
+  >
+    <span aria-hidden="true">▲</span>
+    <span class="boost-count tabular-nums">·</span>
+  </button>
+  <span class="boost-cooldown hidden text-xs italic text-muted"></span>
+</div>
 
 <script>
   import { supabase, BOOSTS_TABLE } from '../lib/supabase';
 
   type Counts = Record<string, number>;
   let channel: ReturnType<typeof supabase.channel> | null = null;
+  let cachedIp: string | null = null;
+
+  async function getClientIp(): Promise<string | null> {
+    if (cachedIp) return cachedIp;
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      const { ip } = (await res.json()) as { ip: string };
+      cachedIp = ip;
+      return ip;
+    } catch {
+      return null;
+    }
+  }
+
+  function showCooldown(btn: HTMLButtonElement) {
+    const wrapper = btn.closest<HTMLElement>('.boost-wrapper');
+    const msg = wrapper?.querySelector<HTMLElement>('.boost-cooldown');
+    if (!msg) return;
+    const lang = btn.dataset.lang ?? 'es';
+    msg.textContent =
+      lang === 'es'
+        ? 'Espera un momento antes de volver a votar'
+        : 'Wait a moment before boosting again';
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 3000);
+  }
 
   function applyCounts(counts: Counts) {
     document.querySelectorAll<HTMLElement>('.boost-btn').forEach((btn) => {
@@ -133,6 +163,27 @@ const t = useTranslations(lang);
         e.stopPropagation();
         const slug = btn.dataset.slug ?? '';
         const section = btn.dataset.section ?? '';
+
+        const ip = await getClientIp();
+
+        // Cooldown: bloquea si esta IP ya votó este elemento en el último minuto.
+        if (ip) {
+          const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
+          const { data: recent } = await supabase
+            .from(BOOSTS_TABLE)
+            .select('item_slug')
+            .eq('item_slug', slug)
+            .eq('seccion', section)
+            .eq('voter_ip', ip)
+            .gte('created_at', oneMinuteAgo)
+            .limit(1);
+
+          if (recent && recent.length > 0) {
+            showCooldown(btn);
+            return;
+          }
+        }
+
         // Incremento optimista para feedback inmediato.
         const countEl = btn.querySelector<HTMLElement>('.boost-count');
         if (countEl) {
@@ -140,7 +191,12 @@ const t = useTranslations(lang);
           countEl.textContent = String(current + 1);
         }
         btn.classList.add('text-accent', 'border-accent');
-        await supabase.from(BOOSTS_TABLE).insert({ item_slug: slug, seccion: section });
+
+        await supabase.from(BOOSTS_TABLE).insert({
+          item_slug: slug,
+          seccion: section,
+          ...(ip ? { voter_ip: ip } : {}),
+        });
         loadAndRender();
       });
     });
@@ -163,6 +219,7 @@ const t = useTranslations(lang);
     wireClicks();
     loadAndRender();
     subscribe();
+    getClientIp(); // pre-fetch para tenerla cacheada cuando el usuario haga clic
   }
 
   init();
