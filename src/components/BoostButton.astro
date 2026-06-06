@@ -179,9 +179,11 @@ const t = useTranslations(lang);
         const ip = await getClientIp();
 
         // Cooldown: bloquea si esta IP ya votó este elemento en el último minuto.
+        // Si la columna voter_ip no existe aún en BD, el check falla con error
+        // y simplemente se omite (degradación elegante hasta que se ejecute el SQL).
         if (ip) {
           const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
-          const { data: recent } = await supabase
+          const { data: recent, error: cooldownErr } = await supabase
             .from(BOOSTS_TABLE)
             .select('item_slug')
             .eq('item_slug', slug)
@@ -190,7 +192,7 @@ const t = useTranslations(lang);
             .gte('created_at', oneMinuteAgo)
             .limit(1);
 
-          if (recent && recent.length > 0) {
+          if (!cooldownErr && recent && recent.length > 0) {
             showCooldown(btn);
             return;
           }
@@ -204,11 +206,15 @@ const t = useTranslations(lang);
         }
         btn.classList.add('text-accent', 'border-accent');
 
-        await supabase.from(BOOSTS_TABLE).insert({
+        // Intenta guardar con IP; si la columna no existe aún, reintenta sin ella.
+        const { error: insertErr } = await supabase.from(BOOSTS_TABLE).insert({
           item_slug: slug,
           seccion: section,
           ...(ip ? { voter_ip: ip } : {}),
         });
+        if (insertErr) {
+          await supabase.from(BOOSTS_TABLE).insert({ item_slug: slug, seccion: section });
+        }
         loadAndRender();
       });
     });
