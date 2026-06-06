@@ -35,7 +35,7 @@ const labels = {
               data-section="prompts"
               data-title={p.data.titulo}
             >
-              <article class="flex flex-col rounded-xl border border-line bg-white/50 p-6">
+              <article class="flex h-full flex-col rounded-xl border border-line bg-white/50 p-6">
                 {p.data.categoria && (
                   <span class="text-xs uppercase tracking-wider text-accent">
                     {p.data.categoria}
@@ -54,31 +54,31 @@ const labels = {
                   </ul>
                 )}
 
-                <div class="mt-5 flex flex-wrap gap-3 pt-1">
-                  {p.data.demo && (
-                    <button
-                      type="button"
-                      class="demo-trigger rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white transition hover:opacity-90"
-                      data-demo={p.data.demo}
-                    >
-                      {labels.demo}
-                    </button>
-                  )}
-                  {p.data.github && (
-                    <a
-                      href={p.data.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="rounded-full border border-line px-4 py-1.5 text-sm font-medium text-muted transition hover:text-accent"
-                    >
-                      {labels.github}
-                    </a>
-                  )}
+                <div class="mt-5 flex items-center justify-between gap-3 pt-1">
+                  <div class="flex flex-wrap gap-3">
+                    {p.data.demo && (
+                      <button
+                        type="button"
+                        class="demo-trigger rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white transition hover:opacity-90"
+                        data-demo={p.data.demo}
+                      >
+                        {labels.demo}
+                      </button>
+                    )}
+                    {p.data.github && (
+                      <a
+                        href={p.data.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="rounded-full border border-line px-4 py-1.5 text-sm font-medium text-muted transition hover:text-accent"
+                      >
+                        {labels.github}
+                      </a>
+                    )}
+                  </div>
+                  <BoostButton lang={lang} slug={p.data.slug} section="prompts" />
                 </div>
               </article>
-              <div class="mt-2 flex justify-end">
-                <BoostButton lang={lang} slug={p.data.slug} section="prompts" />
-              </div>
             </div>
           ))}
         </div>

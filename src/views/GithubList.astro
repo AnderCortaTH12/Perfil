@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageIntro from '../components/PageIntro.astro';
-import Card from '../components/Card.astro';
 import BoostButton from '../components/BoostButton.astro';
 import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
@@ -31,16 +30,36 @@ const items = await getItems('github', lang);
               data-section="github"
               data-title={r.data.titulo}
             >
-              <Card
-                title={r.data.titulo}
-                href={r.data.repo || undefined}
-                external
-                eyebrow={r.data.lenguaje}
-                badge={r.data.destacado ? t('card.featured') : undefined}
-              >
-                <p>{r.data.descripcion}</p>
+              <article class="flex h-full flex-col rounded-xl border border-line bg-white/50 p-6">
+                {r.data.lenguaje && (
+                  <div class="mb-2 text-xs uppercase tracking-wider text-muted">
+                    {r.data.lenguaje}
+                  </div>
+                )}
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-serif text-xl leading-snug">
+                    {r.data.repo ? (
+                      <a
+                        href={r.data.repo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="transition hover:text-accent"
+                      >
+                        {r.data.titulo}
+                      </a>
+                    ) : (
+                      r.data.titulo
+                    )}
+                  </h3>
+                  {r.data.destacado && (
+                    <span class="shrink-0 rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">
+                      {t('card.featured')}
+                    </span>
+                  )}
+                </div>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-muted">{r.data.descripcion}</p>
                 {r.data.tags.length > 0 && (
-                  <ul class="mt-4 flex flex-wrap gap-1.5" slot="footer">
+                  <ul class="mt-4 flex flex-wrap gap-1.5">
                     {r.data.tags.map((tag) => (
                       <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">
                         #{tag}
@@ -48,10 +67,10 @@ const items = await getItems('github', lang);
                     ))}
                   </ul>
                 )}
-              </Card>
-              <div class="mt-2 flex justify-end">
-                <BoostButton lang={lang} slug={r.data.slug} section="github" />
-              </div>
+                <div class="mt-4 flex justify-end">
+                  <BoostButton lang={lang} slug={r.data.slug} section="github" />
+                </div>
+              </article>
             </div>
           ))}
         </div>
