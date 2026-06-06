@@ -32,18 +32,21 @@ const t = useTranslations(lang);
 
   type Counts = Record<string, number>;
   let channel: ReturnType<typeof supabase.channel> | null = null;
-  let cachedIp: string | null = null;
 
-  async function getClientIp(): Promise<string | null> {
-    if (cachedIp) return cachedIp;
+  // ── Cooldown (localStorage, sin dependencia de columnas en BD) ──────────────
+  function isOnCooldown(slug: string, section: string): boolean {
     try {
-      const res = await fetch('https://api.ipify.org?format=json');
-      const { ip } = (await res.json()) as { ip: string };
-      cachedIp = ip;
-      return ip;
+      const last = Number(localStorage.getItem(`boost_cd_${section}_${slug}`) ?? 0);
+      return Date.now() - last < 60_000;
     } catch {
-      return null;
+      return false;
     }
+  }
+
+  function recordCooldown(slug: string, section: string) {
+    try {
+      localStorage.setItem(`boost_cd_${section}_${slug}`, String(Date.now()));
+    } catch { /* noop en entornos sin localStorage */ }
   }
 
   function showCooldown(btn: HTMLButtonElement) {
@@ -59,6 +62,7 @@ const t = useTranslations(lang);
     setTimeout(() => msg.classList.add('hidden'), 3000);
   }
 
+  // ── Render ──────────────────────────────────────────────────────────────────
   function applyCounts(counts: Counts) {
     document.querySelectorAll<HTMLElement>('.boost-btn').forEach((btn) => {
       const slug = btn.dataset.slug ?? '';
@@ -133,6 +137,17 @@ const t = useTranslations(lang);
     strip.appendChild(list);
   }
 
+  function sortByBoosts(cards: HTMLElement[], counts: Counts) {
+    const grid = document.querySelector<HTMLElement>('[data-sort-boosts]');
+    if (!grid) return;
+    const sorted = [...cards].sort((a, b) => {
+      const na = counts[a.dataset.slug ?? ''] ?? 0;
+      const nb = counts[b.dataset.slug ?? ''] ?? 0;
+      return nb - na;
+    });
+    sorted.forEach((card) => grid.appendChild(card));
+  }
+
   async function loadAndRender() {
     const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-boost-card]'));
     if (cards.length === 0) return;
@@ -155,17 +170,7 @@ const t = useTranslations(lang);
     sortByBoosts(cards, counts);
   }
 
-  function sortByBoosts(cards: HTMLElement[], counts: Counts) {
-    const grid = document.querySelector<HTMLElement>('[data-sort-boosts]');
-    if (!grid) return;
-    const sorted = [...cards].sort((a, b) => {
-      const na = counts[a.dataset.slug ?? ''] ?? 0;
-      const nb = counts[b.dataset.slug ?? ''] ?? 0;
-      return nb - na;
-    });
-    sorted.forEach((card) => grid.appendChild(card));
-  }
-
+  // ── Clicks ──────────────────────────────────────────────────────────────────
   function wireClicks() {
     document.querySelectorAll<HTMLButtonElement>('.boost-btn').forEach((btn) => {
       if (btn.dataset.wired) return;
@@ -176,26 +181,9 @@ const t = useTranslations(lang);
         const slug = btn.dataset.slug ?? '';
         const section = btn.dataset.section ?? '';
 
-        const ip = await getClientIp();
-
-        // Cooldown: bloquea si esta IP ya votó este elemento en el último minuto.
-        // Si la columna voter_ip no existe aún en BD, el check falla con error
-        // y simplemente se omite (degradación elegante hasta que se ejecute el SQL).
-        if (ip) {
-          const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
-          const { data: recent, error: cooldownErr } = await supabase
-            .from(BOOSTS_TABLE)
-            .select('item_slug')
-            .eq('item_slug', slug)
-            .eq('seccion', section)
-            .eq('voter_ip', ip)
-            .gte('created_at', oneMinuteAgo)
-            .limit(1);
-
-          if (!cooldownErr && recent && recent.length > 0) {
-            showCooldown(btn);
-            return;
-          }
+        if (isOnCooldown(slug, section)) {
+          showCooldown(btn);
+          return;
         }
 
         // Incremento optimista para feedback inmediato.
@@ -206,20 +194,14 @@ const t = useTranslations(lang);
         }
         btn.classList.add('text-accent', 'border-accent');
 
-        // Intenta guardar con IP; si la columna no existe aún, reintenta sin ella.
-        const { error: insertErr } = await supabase.from(BOOSTS_TABLE).insert({
-          item_slug: slug,
-          seccion: section,
-          ...(ip ? { voter_ip: ip } : {}),
-        });
-        if (insertErr) {
-          await supabase.from(BOOSTS_TABLE).insert({ item_slug: slug, seccion: section });
-        }
+        recordCooldown(slug, section);
+        await supabase.from(BOOSTS_TABLE).insert({ item_slug: slug, seccion: section });
         loadAndRender();
       });
     });
   }
 
+  // ── Realtime ─────────────────────────────────────────────────────────────────
   function subscribe() {
     if (channel) supabase.removeChannel(channel);
     channel = supabase
@@ -237,7 +219,6 @@ const t = useTranslations(lang);
     wireClicks();
     loadAndRender();
     subscribe();
-    getClientIp(); // pre-fetch para tenerla cacheada cuando el usuario haga clic
   }
 
   init();
