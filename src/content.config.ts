@@ -89,10 +89,28 @@ const certificaciones = defineCollection({
   }),
 });
 
+const resumenesMeff = defineCollection({
+  loader: glob({
+    pattern: '*.md',
+    base: './src/content/resumenes-meff',
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+  schema: z.object({
+    fecha: z.date(),
+    titular: z.string(),
+    movimientos_destacados: z.array(z.string()).optional(),
+    tokens_input: z.number().optional(),
+    tokens_output: z.number().optional(),
+    coste_usd: z.number().optional(),
+    generado_por: z.string().default('Claude Sonnet 4.5 vía mercados-diario'),
+  }),
+});
+
 export const collections = {
   'proyectos-ia': proyectosIa,
   github,
   divulgacion,
   prompts,
   certificaciones,
+  'resumenes-meff': resumenesMeff,
 };

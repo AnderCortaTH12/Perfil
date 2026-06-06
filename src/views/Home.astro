@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Carousel from '../components/Carousel.astro';
+import WidgetMeff from '../components/WidgetMeff.astro';
 import { useTranslations, sections, type Lang, type UIKey } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
 import { getFeed, getItems } from '../lib/content';
@@ -48,6 +49,8 @@ const stats = counts.filter((c) => c.n > 0);
       )
     }
   </section>
+
+  <WidgetMeff lang={lang} />
 
   <Carousel lang={lang} items={feed} />
 

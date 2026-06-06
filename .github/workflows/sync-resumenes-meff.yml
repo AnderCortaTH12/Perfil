@@ -1,0 +1,49 @@
+# =============================================================================
+# GitHub Action: Sincronizar resúmenes MEFF
+# =============================================================================
+#
+# CUÁNDO EJECUTA:
+#   08:30 UTC de lunes a viernes — 30 minutos después del cron de
+#   mercados-diario (que corre a las 08:00 UTC). Esto le da tiempo
+#   suficiente al pipeline de análisis para generar y pushear el resumen.
+#
+# EJECUCIÓN MANUAL:
+#   Desde la pestaña Actions → Sincronizar resúmenes MEFF → Run workflow.
+# =============================================================================
+
+name: Sincronizar resúmenes MEFF
+
+on:
+  schedule:
+    - cron: '30 8 * * 1-5'   # 08:30 UTC lun-vie (09:30 ES invierno / 10:30 ES verano)
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sincronizar últimos 4 resúmenes
+        run: python scripts/sync_resumenes_meff.py
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/content/resumenes-meff/ || true
+          if git diff --staged --quiet; then
+            echo "::notice::No hay resúmenes nuevos que sincronizar."
+            exit 0
+          fi
+          git commit -m "Sync resúmenes MEFF $(date -u +%Y-%m-%d)"
+          git push

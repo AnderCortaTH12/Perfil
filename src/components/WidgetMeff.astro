@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content';
+import { useTranslations, type Lang } from '../i18n/ui';
+import { localizedPath, formatDate as _fmt } from '../i18n/utils';
+import { formatDate } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const all = await getCollection('resumenes-meff').catch(() => []);
+all.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const ultimo = all[0] ?? null;
+
+const href = localizedPath('/proyectos-ia/mercados-diario', lang);
+---
+
+<section class="mx-auto max-w-5xl px-6 pb-10">
+  <div class="rounded-2xl border border-line bg-white/60 px-8 py-7 shadow-sm backdrop-blur-sm transition hover:shadow-md">
+    {ultimo ? (
+      <>
+        <!-- Eyebrow -->
+        <div class="mb-4 flex items-center justify-between gap-4">
+          <span class="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+            {t('meff.label')}
+          </span>
+          <span class="text-xs text-muted">{formatDate(ultimo.data.fecha, lang)}</span>
+        </div>
+
+        <!-- Titular -->
+        <h2 class="font-serif text-2xl leading-snug tracking-tight sm:text-3xl">
+          {ultimo.data.titular}
+        </h2>
+
+        <!-- Movimientos destacados -->
+        {ultimo.data.movimientos_destacados && ultimo.data.movimientos_destacados.length > 0 && (
+          <div class="mt-5">
+            <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+              {t('meff.movements')}
+            </p>
+            <ul class="space-y-1.5">
+              {ultimo.data.movimientos_destacados.slice(0, 3).map((m) => (
+                <li class="flex items-start gap-2 text-sm leading-relaxed text-foreground">
+                  <span class="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-accent" />
+                  <span>{m}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Footer row -->
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+          <p class="text-xs text-muted">
+            {t('meff.ai_generated')}
+          </p>
+          <a
+            href={href}
+            class="inline-flex items-center gap-1 text-sm font-medium text-accent underline-offset-4 hover:underline"
+          >
+            {t('meff.cta')}
+          </a>
+        </div>
+      </>
+    ) : (
+      <>
+        <!-- Placeholder state -->
+        <div class="mb-3 flex items-center gap-3">
+          <span class="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+            {t('meff.label')}
+          </span>
+        </div>
+        <p class="font-serif text-xl text-muted">{t('meff.placeholder')}</p>
+        <div class="mt-4 border-t border-line pt-4">
+          <a
+            href={href}
+            class="inline-flex items-center gap-1 text-sm text-accent underline-offset-4 hover:underline"
+          >
+            {t('meff.cta')}
+          </a>
+        </div>
+      </>
+    )}
+  </div>
+</section>

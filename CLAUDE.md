@@ -166,3 +166,29 @@ credencial_id: ""            # opcional
 ## Al borrar
 
 - Elimina ambos archivos del idioma (`.es.md` y `.en.md`) y sus imágenes/PDF asociados si no se usan en otro sitio.
+
+---
+
+## Sistema mercados-diario
+
+El repositorio [AnderCortaTH12/mercados-diario](https://github.com/AnderCortaTH12/mercados-diario) genera cada día hábil (lun-vie) a las 08:00-09:00 UTC un resumen del cierre del MEFF con Claude API.
+
+El portfolio sincroniza esos resúmenes automáticamente 30 minutos después y reconstruye el sitio estático. El workflow es `.github/workflows/sync-resumenes-meff.yml` y el script es `scripts/sync_resumenes_meff.py`.
+
+### Añadir un resumen manualmente (raro)
+
+1. Descarga `resumenes/meff/YYYY-MM-DD.md` y `YYYY-MM-DD.json` del repo mercados-diario.
+2. Ejecuta `python scripts/sync_resumenes_meff.py` — sincronizará automáticamente los 4 más recientes.
+3. O crea el archivo `src/content/resumenes-meff/YYYY-MM-DD.md` a mano siguiendo el frontmatter de los existentes.
+
+### Lanzar la sincronización manualmente desde GitHub Actions
+
+1. Ve a **Actions → Sincronizar resúmenes MEFF**.
+2. Pulsa **Run workflow** → **Run workflow**.
+
+### Colección `resumenes-meff`
+
+- **Archivos:** `src/content/resumenes-meff/YYYY-MM-DD.md` (un archivo por día, sin sufijo de idioma).
+- **Frontmatter:** `fecha`, `titular`, `movimientos_destacados` (array), `tokens_input`, `tokens_output`, `coste_usd`, `generado_por`.
+- **Body:** contenido Markdown completo del resumen (renderizado con Astro `render()`).
+- La página del proyecto en `/proyectos-ia/mercados-diario` los muestra como último resumen + acordeones anteriores.

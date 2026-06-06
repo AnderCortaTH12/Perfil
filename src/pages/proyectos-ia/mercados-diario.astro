@@ -1,0 +1,128 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Mermaid from '../../components/Mermaid.astro';
+import { useTranslations } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/utils';
+import { formatDate } from '../../lib/content';
+
+const lang = 'es';
+const t = useTranslations(lang);
+
+// Project content
+const proyectos = await getCollection('proyectos-ia', (e) => e.data.slug === 'mercados-diario' && e.data.idioma === 'es');
+const entry = proyectos[0];
+if (!entry) throw new Error('mercados-diario.es.md not found in proyectos-ia');
+const { Content: ProyectoContent } = await render(entry);
+const d = entry.data;
+
+// MEFF summaries
+const allResumenes = await getCollection('resumenes-meff').catch(() => []);
+allResumenes.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const ultimoResumen = allResumenes[0] ?? null;
+const anteriores = allResumenes.slice(1, 4);
+
+// Pre-render anteriores
+const anterioresRendered = await Promise.all(
+  anteriores.map(async (r) => {
+    const { Content } = await render(r);
+    return { r, Content };
+  })
+);
+
+// Render último resumen
+let UltimoContent: any = null;
+if (ultimoResumen) {
+  const rendered = await render(ultimoResumen);
+  UltimoContent = rendered.Content;
+}
+---
+
+<Layout lang={lang} title={d.titulo} description={d.resumen}>
+  <article class="mx-auto max-w-3xl px-6 pt-16 pb-12">
+    <a href={localizedPath('/proyectos-ia', lang)} class="text-sm text-muted transition hover:text-accent">
+      {t('list.back')}
+    </a>
+
+    <header class="mt-6 mb-8">
+      <p class="text-sm text-muted">{formatDate(d.fecha, lang)}</p>
+      <h1 class="mt-2 font-serif text-4xl tracking-tight">{d.titulo}</h1>
+      <p class="mt-4 text-lg text-muted">{d.resumen}</p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-4 text-sm">
+        {d.repo && (
+          <a href={d.repo} target="_blank" rel="noopener noreferrer"
+             class="text-accent underline underline-offset-4">
+            {t('meta.repo')} ↗
+          </a>
+        )}
+      </div>
+
+      {d.stack.length > 0 && (
+        <div class="mt-5">
+          <span class="text-xs uppercase tracking-wider text-muted">{t('meta.stack')}</span>
+          <ul class="mt-2 flex flex-wrap gap-1.5">
+            {d.stack.map((tech) => (
+              <li class="rounded-full bg-paper-soft px-2.5 py-0.5 text-xs text-muted">{tech}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </header>
+
+    <!-- Último resumen MEFF -->
+    <section class="mt-10 border-t border-line pt-10">
+      <h2 class="font-serif text-2xl">{t('meff.latest_summary')}</h2>
+
+      {ultimoResumen && UltimoContent ? (
+        <div class="mt-4">
+          <div class="mb-3 flex items-center justify-between text-sm text-muted">
+            <span class="font-semibold uppercase tracking-wider text-accent text-xs">
+              {t('meff.label')}
+            </span>
+            <span>{formatDate(ultimoResumen.data.fecha, lang)}</span>
+          </div>
+          <div class="prose-content">
+            <UltimoContent />
+          </div>
+          <p class="mt-4 text-xs text-muted">{t('meff.ai_generated')}</p>
+        </div>
+      ) : (
+        <p class="mt-4 text-muted">{t('meff.placeholder')}</p>
+      )}
+    </section>
+
+    <!-- Resúmenes anteriores -->
+    {anterioresRendered.length > 0 && (
+      <section class="mt-10 border-t border-line pt-8">
+        <h2 class="mb-4 font-serif text-xl">{t('meff.prev_summaries')}</h2>
+        <div class="space-y-3">
+          {anterioresRendered.map(({ r, Content }) => (
+            <details class="group rounded-xl border border-line bg-white/40 transition open:bg-white/70">
+              <summary class="flex cursor-pointer items-center justify-between px-5 py-3.5 text-sm font-medium list-none">
+                <span class="font-serif">
+                  {formatDate(r.data.fecha, lang)}
+                  {r.data.titular && (
+                    <span class="ml-2 font-normal text-muted">— {r.data.titular.slice(0, 60)}{r.data.titular.length > 60 ? '…' : ''}</span>
+                  )}
+                </span>
+                <span class="text-muted transition group-open:rotate-180">▾</span>
+              </summary>
+              <div class="prose-content border-t border-line px-5 pb-5 pt-4">
+                <Content />
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <hr class="my-12 border-line" />
+
+    {d.diagrama && <Mermaid code={d.diagrama} label={t('meta.diagram')} />}
+
+    <div class="prose-content mt-8">
+      <ProyectoContent />
+    </div>
+  </article>
+</Layout>
