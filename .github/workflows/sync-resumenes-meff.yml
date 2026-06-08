@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
 
     steps:
       - name: Checkout
@@ -37,13 +38,23 @@ jobs:
         run: python scripts/sync_resumenes_meff.py
 
       - name: Commit y push si hay cambios
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add src/content/resumenes-meff/ || true
           if git diff --staged --quiet; then
             echo "::notice::No hay resúmenes nuevos que sincronizar."
+            echo "pushed=false" >> $GITHUB_OUTPUT
             exit 0
           fi
           git commit -m "Sync resúmenes MEFF $(date -u +%Y-%m-%d)"
           git push
+          echo "pushed=true" >> $GITHUB_OUTPUT
+
+      - name: Disparar workflow de deploy
+        if: steps.commit.outputs.pushed == 'true'
+        run: |
+          gh workflow run "Deploy to GitHub Pages" --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
