@@ -16,6 +16,9 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+  markdown: {
+    allowDangerousHtml: true,
+  },
   vite: {
     plugins: [tailwindcss()]
   }
