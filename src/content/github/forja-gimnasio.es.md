@@ -9,15 +9,6 @@ lenguaje: "React + TypeScript"
 tags: ["PWA", "Fitness", "Tracking", "IndexedDB", "Offline-first"]
 skills: ["React 18", "TypeScript", "Tailwind CSS 3", "Dexie", "IndexedDB", "Zustand", "Recharts", "framer-motion"]
 destacado: true
-capturas:
-  - src: "/proyectos/forja/forja-today.png"
-    alt: "Pantalla de hoy con el entrenamiento actual"
-  - src: "/proyectos/forja/forja-session.png"
-    alt: "Registro de sesión con series y pesos"
-  - src: "/proyectos/forja/forja-progress.png"
-    alt: "Gráficas de progreso y volumen"
-  - src: "/proyectos/forja/forja-catalog.png"
-    alt: "Catálogo de ejercicios o perfil con métricas"
 ---
 
 **FORJA** es una aplicación web progresiva (PWA) monousuario para el seguimiento de entrenamientos de resistencia. Toda la persistencia es en el navegador mediante IndexedDB, sin backend ni login: los datos nunca salen del dispositivo.

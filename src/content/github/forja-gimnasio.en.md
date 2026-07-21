@@ -9,15 +9,6 @@ lenguaje: "React + TypeScript"
 tags: ["PWA", "Fitness", "Tracking", "IndexedDB", "Offline-first"]
 skills: ["React 18", "TypeScript", "Tailwind CSS 3", "Dexie", "IndexedDB", "Zustand", "Recharts", "framer-motion"]
 destacado: true
-capturas:
-  - src: "/proyectos/forja/forja-today.png"
-    alt: "Today's screen showing active workout"
-  - src: "/proyectos/forja/forja-session.png"
-    alt: "Session logging with sets and weight tracking"
-  - src: "/proyectos/forja/forja-progress.png"
-    alt: "Progress charts and volume analytics"
-  - src: "/proyectos/forja/forja-catalog.png"
-    alt: "Exercise catalog or profile with metrics"
 ---
 
 **FORJA** is a single-user progressive web app (PWA) for strength training tracking. All data is persisted in the browser using IndexedDB—no backend, no login, no cloud. Your data stays on your device.
