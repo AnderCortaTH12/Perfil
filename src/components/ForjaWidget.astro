@@ -1,247 +1,167 @@
 ---
-// Componente Astro para demostración de FORJA
-// Este widget es una mini demo interactiva de la app Gimnasio
+// Mini demo REAL de Gimnasio - Extrae de los componentes reales
+// Colores y estilos exactos de la app
 ---
 
-<div class="forja-widget w-full max-w-96 mx-auto bg-slate-900 text-slate-100 rounded-3xl overflow-hidden shadow-2xl border-8 border-slate-800">
+<style define:vars>
+  :root {
+    --bg: #0B0B0F;
+    --surface: #1A1A22;
+    --border: #26262F;
+    --text: #F5F5F7;
+    --lime: #C6FF3D;
+    --pr: #4ADE80;
+    --regress: #F87171;
+    --warn: #FBBF24;
+  }
+</style>
+
+<div style="background-color: var(--bg); color: var(--text);" class="w-full max-w-[390px] mx-auto rounded-3xl overflow-hidden shadow-2xl border-8 border-[color:var(--surface)] font-sans">
   <!-- Status Bar -->
-  <div class="bg-slate-800 px-4 py-2 flex justify-between text-xs text-slate-300">
+  <div style="background-color: var(--surface); border-bottom-color: var(--border);" class="px-4 py-2 flex justify-between text-xs border-b">
     <span>9:41</span>
     <span>●●●●●</span>
   </div>
 
-  <!-- Header -->
-  <div class="header bg-gradient-to-b from-blue-900 to-blue-800 px-4 py-6 text-center border-b border-slate-700">
-    <h1 class="text-2xl font-bold mb-1">📅 Hoy</h1>
-    <p class="text-xs text-slate-300">Lunes 24 de Julio</p>
+  <!-- Header Sticky -->
+  <div style="background-color: rgba(11, 11, 15, 0.8); border-bottom-color: var(--border);" class="sticky top-0 z-10 backdrop-blur border-b px-6 py-4 mb-2">
+    <div class="flex items-start justify-between">
+      <div>
+        <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">Hoy</p>
+        <h1 style="color: var(--text);" class="text-2xl font-extrabold capitalize">lunes</h1>
+      </div>
+      <div class="text-right">
+        <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Esta semana</p>
+        <p style="color: var(--lime);" class="text-xl font-extrabold">3/5</p>
+      </div>
+    </div>
   </div>
 
-  <!-- Content -->
-  <div class="content-area h-96 overflow-y-auto px-4 py-4 space-y-3">
-    <!-- Today Tab -->
-    <div class="tab-content active" data-tab="today">
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-2">🏋️ Entrenamiento</h3>
-        <p class="text-xs text-slate-400 mb-3">Tren superior - 45 min</p>
-        <button class="start-session-btn w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition">
-          Empezar sesión
-        </button>
+  <!-- Content Area -->
+  <div class="h-96 overflow-y-auto px-6 py-6 space-y-6 pb-24">
+    <!-- Tarjeta Protagonista -->
+    <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg cursor-pointer transition-all hover:border-[color:var(--lime)]/40">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-sm font-semibold" style="color: var(--lime);">⚡ Entrenamiento de hoy</span>
       </div>
+      <p style="color: var(--text);" class="font-medium">Tren superior</p>
+      <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">4 ejercicios · 45 min</p>
+    </div>
 
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-3">📊 Progreso</h3>
-        <div class="space-y-2 text-xs">
-          <div class="flex justify-between">
-            <span class="text-slate-400">Sesiones</span>
-            <span class="text-blue-400 font-semibold">3/5</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-400">Volumen</span>
-            <span class="text-blue-400 font-semibold">12,450 kg</span>
-          </div>
+    <!-- Tira semanal -->
+    <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+      <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">SEMANA</p>
+      <div class="flex gap-2">
+        <div class="flex-1 text-center">
+          <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Lun</p>
+        </div>
+        <div class="flex-1 text-center">
+          <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Mar</p>
+        </div>
+        <div class="flex-1 text-center">
+          <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Mié</p>
+        </div>
+        <div class="flex-1 text-center">
+          <div style="background-color: var(--surface); border: 2px solid var(--border);" class="h-8 rounded-lg mb-1"></div>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Jue</p>
+        </div>
+        <div class="flex-1 text-center">
+          <div style="background-color: var(--surface); border: 2px solid var(--border);" class="h-8 rounded-lg mb-1"></div>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Vie</p>
+        </div>
+        <div class="flex-1 text-center">
+          <div style="background-color: var(--regress); opacity: 0.3;" class="h-8 rounded-lg mb-1"></div>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Sab</p>
+        </div>
+        <div class="flex-1 text-center">
+          <div style="background-color: var(--regress); opacity: 0.3;" class="h-8 rounded-lg mb-1"></div>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Dom</p>
         </div>
       </div>
+    </div>
 
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-3">⏱️ Últimos ejercicios</h3>
-        <div class="flex justify-between text-xs py-2 border-b border-slate-700/30">
+    <!-- Resumen Esta Semana -->
+    <div style="background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+      <div class="mb-4 flex items-center gap-2 text-sm font-semibold">
+        <span style="color: var(--lime);">✨</span>
+        <span style="color: rgba(245, 245, 247, 0.6);">Esta semana</span>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <!-- Días entrenados -->
+        <div class="flex flex-col">
+          <span style="color: var(--text);" class="text-2xl font-extrabold leading-none">3</span>
+          <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Entrenados</span>
+        </div>
+        <!-- Volumen -->
+        <div class="flex flex-col">
+          <div class="flex items-baseline gap-1">
+            <span style="color: var(--text);" class="text-2xl font-extrabold leading-none">12.4</span>
+            <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium">t</span>
+          </div>
+          <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Volumen</span>
+        </div>
+        <!-- Adherencia -->
+        <div class="flex flex-col">
+          <span style="color: var(--lime);" class="text-2xl font-extrabold leading-none">60%</span>
+          <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Adherencia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Récord Personal -->
+    <div>
+      <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">ÚLTIMAS SESIONES</p>
+      <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg space-y-3">
+        <!-- Sesión 1 -->
+        <div class="flex justify-between items-start">
           <div>
-            <p class="font-medium">Press banca</p>
-            <p class="text-slate-500">hace 2 días</p>
+            <p style="color: var(--text);" class="font-medium text-sm">Press banca</p>
+            <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">hace 2 días</p>
           </div>
-          <span class="text-blue-400 font-semibold">4×8 100kg</span>
+          <div class="text-right">
+            <p style="color: var(--pr);" class="text-sm font-extrabold">4 × 100kg</p>
+            <p style="color: var(--pr);" class="text-xs font-medium">+5kg PR</p>
+          </div>
         </div>
-        <div class="flex justify-between text-xs py-2">
+        <!-- Sesión 2 -->
+        <div class="flex justify-between items-start">
           <div>
-            <p class="font-medium">Sentadilla</p>
-            <p class="text-slate-500">ayer</p>
+            <p style="color: var(--text);" class="font-medium text-sm">Sentadilla</p>
+            <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">ayer</p>
           </div>
-          <span class="text-blue-400 font-semibold">4×6 140kg</span>
+          <p style="color: var(--text);" class="text-sm font-extrabold">6 × 140kg</p>
         </div>
       </div>
     </div>
 
-    <!-- Workout Tab -->
-    <div class="tab-content hidden" data-tab="workout">
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-red-400 mb-2">🔴 En progreso: Press banca</h3>
-        <button class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition">
-          + Añadir serie
+    <!-- Accesos rápidos -->
+    <div>
+      <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">ACCESOS RÁPIDOS</p>
+      <div class="grid grid-cols-3 gap-3">
+        <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
+          <span class="text-xl">➕</span>
+          <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Libre</span>
         </button>
-      </div>
-
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-3">Series registradas</h3>
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs py-2 border-b border-slate-700/30">
-            <span class="text-slate-500">Serie 1</span>
-            <span class="text-blue-400 font-semibold">10 reps × 80kg</span>
-          </div>
-          <div class="flex justify-between text-xs py-2 border-b border-slate-700/30">
-            <span class="text-slate-500">Serie 2</span>
-            <span class="text-blue-400 font-semibold">8 reps × 90kg</span>
-          </div>
-          <div class="flex justify-between text-xs py-2">
-            <span class="text-slate-500">Serie 3</span>
-            <span class="text-blue-400 font-semibold">6 reps × 100kg</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400">⏱️ Descanso: 2:34</h3>
-        <button class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg text-xs font-semibold mt-3 hover:opacity-90 transition">
-          Siguiente ejercicio
+        <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
+          <span class="text-xl">⚡</span>
+          <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Ejercicios</span>
         </button>
-      </div>
-    </div>
-
-    <!-- Progress Tab -->
-    <div class="tab-content hidden" data-tab="progress">
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur text-center">
-        <h3 class="text-sm font-semibold text-blue-400 mb-4">📈 Volumen Total</h3>
-        <p class="text-slate-500 text-xs mb-2">📊 Gráfica de tendencia</p>
-        <p class="text-blue-400 text-xs">↑ +12% respecto a hace 1 mes</p>
-      </div>
-
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-3">💪 Fuerza Máxima</h3>
-        <div class="space-y-2 text-xs">
-          <div class="flex justify-between py-2 border-b border-slate-700/30">
-            <span class="text-slate-400">Press banca</span>
-            <span class="text-blue-400 font-semibold">110kg</span>
-          </div>
-          <div class="flex justify-between py-2 border-b border-slate-700/30">
-            <span class="text-slate-400">Sentadilla</span>
-            <span class="text-blue-400 font-semibold">150kg</span>
-          </div>
-          <div class="flex justify-between py-2">
-            <span class="text-slate-400">Peso muerto</span>
-            <span class="text-blue-400 font-semibold">180kg</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-3">📏 Métricas</h3>
-        <div class="space-y-2 text-xs">
-          <div class="flex justify-between py-2 border-b border-slate-700/30">
-            <span class="text-slate-400">Peso</span>
-            <span class="text-blue-400 font-semibold">82 kg</span>
-          </div>
-          <div class="flex justify-between py-2">
-            <span class="text-slate-400">IMC</span>
-            <span class="text-blue-400 font-semibold">28.5</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Exercises Tab -->
-    <div class="tab-content hidden" data-tab="exercises">
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <input
-          type="text"
-          placeholder="Buscar ejercicio..."
-          class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
-        />
-      </div>
-
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-2">💪 Pecho</h3>
-        <div class="space-y-2">
-          <div class="flex justify-between items-center text-xs py-2 border-b border-slate-700/30">
-            <span class="text-slate-300">Press banca</span>
-            <span class="text-blue-400 text-xs">GIF</span>
-          </div>
-          <div class="flex justify-between items-center text-xs py-2">
-            <span class="text-slate-300">Pecho inclinado</span>
-            <span class="text-blue-400 text-xs">GIF</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-slate-800/40 border border-slate-700/40 rounded-lg p-4 backdrop-blur">
-        <h3 class="text-sm font-semibold text-blue-400 mb-2">🦵 Piernas</h3>
-        <div class="space-y-2">
-          <div class="flex justify-between items-center text-xs py-2 border-b border-slate-700/30">
-            <span class="text-slate-300">Sentadilla</span>
-            <span class="text-blue-400 text-xs">GIF</span>
-          </div>
-          <div class="flex justify-between items-center text-xs py-2">
-            <span class="text-slate-300">Leg press</span>
-            <span class="text-blue-400 text-xs">GIF</span>
-          </div>
-        </div>
+        <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
+          <span class="text-xl">📈</span>
+          <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Progreso</span>
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Tab Bar -->
-  <div class="flex gap-0 bg-slate-800/50 border-t border-slate-700">
-    <button class="tab-btn flex-1 py-3 text-xs font-medium transition-all border-t-2 border-blue-400 text-blue-400" data-tab="today">
-      📅
-    </button>
-    <button class="tab-btn flex-1 py-3 text-xs font-medium transition-all border-t-2 border-transparent text-slate-500 hover:text-slate-300" data-tab="workout">
-      🔴
-    </button>
-    <button class="tab-btn flex-1 py-3 text-xs font-medium transition-all border-t-2 border-transparent text-slate-500 hover:text-slate-300" data-tab="progress">
-      📈
-    </button>
-    <button class="tab-btn flex-1 py-3 text-xs font-medium transition-all border-t-2 border-transparent text-slate-500 hover:text-slate-300" data-tab="exercises">
-      💪
-    </button>
+  <div style="background-color: var(--surface); border-top-color: var(--border);" class="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto border-t flex gap-0 px-6 py-3">
+    <button style="color: var(--lime);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors">Hoy</button>
+    <button style="color: rgba(245, 245, 247, 0.5);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors hover:text-[color:var(--text)]">Entrenar</button>
+    <button style="color: rgba(245, 245, 247, 0.5);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors hover:text-[color:var(--text)]">Progreso</button>
+    <button style="color: rgba(245, 245, 247, 0.5);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors hover:text-[color:var(--text)]">Ejercicios</button>
   </div>
 </div>
-
-<script>
-  document.querySelectorAll('.forja-widget').forEach((widget) => {
-    const tabBtns = widget.querySelectorAll('.tab-btn');
-    const tabContents = widget.querySelectorAll('.tab-content');
-    const header = widget.querySelector('.header h1');
-    const subtitle = widget.querySelector('.header p');
-    const startSessionBtn = widget.querySelector('.start-session-btn');
-
-    const tabNames = {
-      today: '📅 Hoy',
-      workout: '🔴 Sesión',
-      progress: '📈 Progreso',
-      exercises: '💪 Catálogo',
-    };
-
-    const tabSubtitles = {
-      today: 'Lunes 24 de Julio',
-      workout: 'Entrenamiento en progreso',
-      progress: 'Últimos 4 meses',
-      exercises: '~1,324 ejercicios',
-    };
-
-    tabBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const tabName = btn.dataset.tab;
-
-        tabBtns.forEach((b) => {
-          b.classList.remove('border-blue-400', 'text-blue-400');
-          b.classList.add('border-transparent', 'text-slate-500');
-        });
-        btn.classList.remove('border-transparent', 'text-slate-500');
-        btn.classList.add('border-blue-400', 'text-blue-400');
-
-        tabContents.forEach((content) => {
-          content.classList.add('hidden');
-        });
-        widget.querySelector(`[data-tab="${tabName}"].tab-content`)?.classList.remove('hidden');
-
-        header.textContent = tabNames[tabName];
-        subtitle.textContent = tabSubtitles[tabName];
-      });
-    });
-
-    if (startSessionBtn) {
-      startSessionBtn.addEventListener('click', () => {
-        const workoutTab = widget.querySelector('[data-tab="workout"].tab-btn');
-        if (workoutTab) workoutTab.click();
-      });
-    }
-  });
-</script>
