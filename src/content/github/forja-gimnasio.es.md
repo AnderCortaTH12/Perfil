@@ -13,6 +13,8 @@ destacado: true
 
 **FORJA** es una aplicación web progresiva (PWA) monousuario para el seguimiento de entrenamientos de resistencia. Toda la persistencia es en el navegador mediante IndexedDB, sin backend ni login: los datos nunca salen del dispositivo.
 
+> ⚠️ **Nota de compatibilidad:** La app está optimizada para móvil y funciona perfectamente en dispositivos Android e iOS. En navegadores de desktop puede haber problemas de renderizado. Se recomienda acceder desde un dispositivo móvil o usar Chrome DevTools con modo dispositivo móvil activado.
+
 ## Arquitectura offline-first
 
 La capa de datos está completamente aislada en `src/db/`, con un modelo de datos normalizado y queries directas a IndexedDB a través de Dexie. De esta forma, el interfaz de usuario es agnóstico respecto a dónde viven los datos, y la app funciona sin conexión con la misma fluidez que online. El estado global está centralizado en Zustand, y Astro garantiza build-time routing y code-splitting automático.

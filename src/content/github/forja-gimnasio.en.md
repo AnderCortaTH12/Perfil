@@ -13,6 +13,8 @@ destacado: true
 
 **FORJA** is a single-user progressive web app (PWA) for strength training tracking. All data is persisted in the browser using IndexedDB—no backend, no login, no cloud. Your data stays on your device.
 
+> ⚠️ **Compatibility note:** The app is optimized for mobile and works perfectly on Android and iOS devices. Desktop browsers may experience rendering issues. It is recommended to access from a mobile device or use Chrome DevTools with mobile device mode enabled.
+
 ## Offline-first architecture
 
 The entire data layer is isolated in `src/db/`, built on Dexie and IndexedDB with a normalized schema. The UI is data-agnostic, so the app works offline with the same responsiveness as online. Global state is centralized in Zustand, and all routing and code-splitting happens automatically at build time.
