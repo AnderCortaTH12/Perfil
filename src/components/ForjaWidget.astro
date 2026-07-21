@@ -14,154 +14,323 @@
     --regress: #F87171;
     --warn: #FBBF24;
   }
+
+  .forja-widget {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+  }
+
+  .forja-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .forja-tab {
+    display: none;
+  }
+
+  .forja-tab.active {
+    display: block;
+  }
 </style>
 
-<div style="background-color: var(--bg); color: var(--text);" class="w-full max-w-[390px] mx-auto rounded-3xl overflow-hidden shadow-2xl border-8 border-[color:var(--surface)] font-sans">
+<div class="forja-widget w-full max-w-[390px] mx-auto rounded-3xl overflow-hidden shadow-2xl border-8" style="background-color: var(--bg); color: var(--text); border-color: var(--surface);">
   <!-- Status Bar -->
   <div style="background-color: var(--surface); border-bottom-color: var(--border);" class="px-4 py-2 flex justify-between text-xs border-b">
     <span>9:41</span>
     <span>●●●●●</span>
   </div>
 
-  <!-- Header Sticky -->
-  <div style="background-color: rgba(11, 11, 15, 0.8); border-bottom-color: var(--border);" class="sticky top-0 z-10 backdrop-blur border-b px-6 py-4 mb-2">
-    <div class="flex items-start justify-between">
-      <div>
-        <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">Hoy</p>
-        <h1 style="color: var(--text);" class="text-2xl font-extrabold capitalize">lunes</h1>
-      </div>
-      <div class="text-right">
-        <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Esta semana</p>
-        <p style="color: var(--lime);" class="text-xl font-extrabold">3/5</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Content Area -->
-  <div class="h-96 overflow-y-auto px-6 py-6 space-y-6 pb-24">
-    <!-- Tarjeta Protagonista -->
-    <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg cursor-pointer transition-all hover:border-[color:var(--lime)]/40">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-sm font-semibold" style="color: var(--lime);">⚡ Entrenamiento de hoy</span>
-      </div>
-      <p style="color: var(--text);" class="font-medium">Tren superior</p>
-      <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">4 ejercicios · 45 min</p>
-    </div>
-
-    <!-- Tira semanal -->
-    <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
-      <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">SEMANA</p>
-      <div class="flex gap-2">
-        <div class="flex-1 text-center">
-          <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
-          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Lun</p>
-        </div>
-        <div class="flex-1 text-center">
-          <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
-          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Mar</p>
-        </div>
-        <div class="flex-1 text-center">
-          <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
-          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Mié</p>
-        </div>
-        <div class="flex-1 text-center">
-          <div style="background-color: var(--surface); border: 2px solid var(--border);" class="h-8 rounded-lg mb-1"></div>
-          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Jue</p>
-        </div>
-        <div class="flex-1 text-center">
-          <div style="background-color: var(--surface); border: 2px solid var(--border);" class="h-8 rounded-lg mb-1"></div>
-          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Vie</p>
-        </div>
-        <div class="flex-1 text-center">
-          <div style="background-color: var(--regress); opacity: 0.3;" class="h-8 rounded-lg mb-1"></div>
-          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Sab</p>
-        </div>
-        <div class="flex-1 text-center">
-          <div style="background-color: var(--regress); opacity: 0.3;" class="h-8 rounded-lg mb-1"></div>
-          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Dom</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Resumen Esta Semana -->
-    <div style="background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
-      <div class="mb-4 flex items-center gap-2 text-sm font-semibold">
-        <span style="color: var(--lime);">✨</span>
-        <span style="color: rgba(245, 245, 247, 0.6);">Esta semana</span>
-      </div>
-      <div class="grid grid-cols-3 gap-2">
-        <!-- Días entrenados -->
-        <div class="flex flex-col">
-          <span style="color: var(--text);" class="text-2xl font-extrabold leading-none">3</span>
-          <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Entrenados</span>
-        </div>
-        <!-- Volumen -->
-        <div class="flex flex-col">
-          <div class="flex items-baseline gap-1">
-            <span style="color: var(--text);" class="text-2xl font-extrabold leading-none">12.4</span>
-            <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium">t</span>
-          </div>
-          <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Volumen</span>
-        </div>
-        <!-- Adherencia -->
-        <div class="flex flex-col">
-          <span style="color: var(--lime);" class="text-2xl font-extrabold leading-none">60%</span>
-          <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Adherencia</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Récord Personal -->
-    <div>
-      <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">ÚLTIMAS SESIONES</p>
-      <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg space-y-3">
-        <!-- Sesión 1 -->
-        <div class="flex justify-between items-start">
+  <!-- Scrollable Content -->
+  <div class="forja-content">
+    <!-- Tab: Hoy -->
+    <div class="forja-tab active" data-tab="hoy">
+      <!-- Header Sticky -->
+      <div style="background-color: rgba(11, 11, 15, 0.8); border-bottom-color: var(--border);" class="sticky top-0 z-10 backdrop-blur border-b px-6 py-4 mb-2">
+        <div class="flex items-start justify-between">
           <div>
-            <p style="color: var(--text);" class="font-medium text-sm">Press banca</p>
-            <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">hace 2 días</p>
+            <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">Hoy</p>
+            <h1 style="color: var(--text);" class="text-2xl font-extrabold capitalize">lunes</h1>
           </div>
           <div class="text-right">
-            <p style="color: var(--pr);" class="text-sm font-extrabold">4 × 100kg</p>
-            <p style="color: var(--pr);" class="text-xs font-medium">+5kg PR</p>
+            <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Esta semana</p>
+            <p style="color: var(--lime);" class="text-xl font-extrabold">3/5</p>
           </div>
         </div>
-        <!-- Sesión 2 -->
-        <div class="flex justify-between items-start">
-          <div>
-            <p style="color: var(--text);" class="font-medium text-sm">Sentadilla</p>
-            <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">ayer</p>
+      </div>
+
+      <div class="px-6 py-6 space-y-6">
+        <!-- Tarjeta Protagonista -->
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg cursor-pointer transition-all hover:border-[color:var(--lime)]/40">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-sm font-semibold" style="color: var(--lime);">⚡ Entrenamiento de hoy</span>
           </div>
-          <p style="color: var(--text);" class="text-sm font-extrabold">6 × 140kg</p>
+          <p style="color: var(--text);" class="font-medium">Tren superior</p>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">4 ejercicios · 45 min</p>
         </div>
+
+        <!-- Tira semanal -->
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+          <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">SEMANA</p>
+          <div class="flex gap-2">
+            <div class="flex-1 text-center">
+              <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
+              <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Lun</p>
+            </div>
+            <div class="flex-1 text-center">
+              <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
+              <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Mar</p>
+            </div>
+            <div class="flex-1 text-center">
+              <div style="background-color: var(--lime);" class="h-8 rounded-lg mb-1"></div>
+              <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Mié</p>
+            </div>
+            <div class="flex-1 text-center">
+              <div style="background-color: var(--surface); border: 2px solid var(--border);" class="h-8 rounded-lg mb-1"></div>
+              <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Jue</p>
+            </div>
+            <div class="flex-1 text-center">
+              <div style="background-color: var(--surface); border: 2px solid var(--border);" class="h-8 rounded-lg mb-1"></div>
+              <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Vie</p>
+            </div>
+            <div class="flex-1 text-center">
+              <div style="background-color: var(--regress); opacity: 0.3;" class="h-8 rounded-lg mb-1"></div>
+              <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Sab</p>
+            </div>
+            <div class="flex-1 text-center">
+              <div style="background-color: var(--regress); opacity: 0.3;" class="h-8 rounded-lg mb-1"></div>
+              <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">Dom</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen Esta Semana -->
+        <div style="background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+          <div class="mb-4 flex items-center gap-2 text-sm font-semibold">
+            <span style="color: var(--lime);">✨</span>
+            <span style="color: rgba(245, 245, 247, 0.6);">Esta semana</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <!-- Días entrenados -->
+            <div class="flex flex-col">
+              <span style="color: var(--text);" class="text-2xl font-extrabold leading-none">3</span>
+              <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Entrenados</span>
+            </div>
+            <!-- Volumen -->
+            <div class="flex flex-col">
+              <div class="flex items-baseline gap-1">
+                <span style="color: var(--text);" class="text-2xl font-extrabold leading-none">12.4</span>
+                <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium">t</span>
+              </div>
+              <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Volumen</span>
+            </div>
+            <!-- Adherencia -->
+            <div class="flex flex-col">
+              <span style="color: var(--lime);" class="text-2xl font-extrabold leading-none">60%</span>
+              <span style="color: rgba(245, 245, 247, 0.5);" class="text-xs font-medium mt-1">Adherencia</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Récord Personal -->
+        <div>
+          <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">ÚLTIMAS SESIONES</p>
+          <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg space-y-3">
+            <!-- Sesión 1 -->
+            <div class="flex justify-between items-start">
+              <div>
+                <p style="color: var(--text);" class="font-medium text-sm">Press banca</p>
+                <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">hace 2 días</p>
+              </div>
+              <div class="text-right">
+                <p style="color: var(--pr);" class="text-sm font-extrabold">4 × 100kg</p>
+                <p style="color: var(--pr);" class="text-xs font-medium">+5kg PR</p>
+              </div>
+            </div>
+            <!-- Sesión 2 -->
+            <div class="flex justify-between items-start">
+              <div>
+                <p style="color: var(--text);" class="font-medium text-sm">Sentadilla</p>
+                <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs">ayer</p>
+              </div>
+              <p style="color: var(--text);" class="text-sm font-extrabold">6 × 140kg</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accesos rápidos -->
+        <div>
+          <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">ACCESOS RÁPIDOS</p>
+          <div class="grid grid-cols-3 gap-3">
+            <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
+              <span class="text-xl">➕</span>
+              <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Libre</span>
+            </button>
+            <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
+              <span class="text-xl">⚡</span>
+              <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Ejercicios</span>
+            </button>
+            <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
+              <span class="text-xl">📈</span>
+              <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Progreso</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="h-6"></div>
       </div>
     </div>
 
-    <!-- Accesos rápidos -->
-    <div>
-      <p style="color: rgba(245, 245, 247, 0.6);" class="text-xs font-semibold mb-3">ACCESOS RÁPIDOS</p>
-      <div class="grid grid-cols-3 gap-3">
-        <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
-          <span class="text-xl">➕</span>
-          <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Libre</span>
-        </button>
-        <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
-          <span class="text-xl">⚡</span>
-          <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Ejercicios</span>
-        </button>
-        <button style="border-color: var(--border);" class="rounded-xl border p-4 transition-all hover:border-[color:var(--lime)]/40 flex flex-col items-center gap-2">
-          <span class="text-xl">📈</span>
-          <span style="color: rgba(245, 245, 247, 0.7);" class="text-xs font-medium">Progreso</span>
-        </button>
+    <!-- Tab: Entrenar -->
+    <div class="forja-tab" data-tab="entrenar">
+      <div style="background-color: rgba(11, 11, 15, 0.8); border-bottom-color: var(--border);" class="sticky top-0 z-10 backdrop-blur border-b px-6 py-4 mb-2">
+        <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">Entrenar</p>
+        <h1 style="color: var(--text);" class="text-2xl font-extrabold">Press banca</h1>
+      </div>
+
+      <div class="px-6 py-6 space-y-6">
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+          <p style="color: var(--lime);" class="text-sm font-semibold mb-3">🔴 EN PROGRESO</p>
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Serie 1</span>
+              <span style="color: var(--text); font-weight: 800;">10 × 80kg</span>
+            </div>
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Serie 2</span>
+              <span style="color: var(--text); font-weight: 800;">8 × 90kg</span>
+            </div>
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Serie 3</span>
+              <span style="color: var(--text); font-weight: 800;">6 × 100kg</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+          <p style="color: var(--text);" class="text-sm font-semibold mb-4">⏱️ Descanso: 2:34</p>
+          <button style="background-color: var(--lime); color: var(--bg);" class="w-full py-2 rounded-lg font-semibold text-sm">Siguiente ejercicio</button>
+        </div>
+
+        <div class="h-6"></div>
+      </div>
+    </div>
+
+    <!-- Tab: Progreso -->
+    <div class="forja-tab" data-tab="progreso">
+      <div style="background-color: rgba(11, 11, 15, 0.8); border-bottom-color: var(--border);" class="sticky top-0 z-10 backdrop-blur border-b px-6 py-4 mb-2">
+        <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">Progreso</p>
+        <h1 style="color: var(--text);" class="text-2xl font-extrabold">Últimos 4 meses</h1>
+      </div>
+
+      <div class="px-6 py-6 space-y-6">
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg text-center">
+          <p style="color: rgba(245, 245, 247, 0.6);" class="text-sm mb-3">📊 Volumen Total</p>
+          <p style="color: var(--lime);" class="text-3xl font-extrabold">↑ +12%</p>
+          <p style="color: rgba(245, 245, 247, 0.5);" class="text-xs mt-1">vs hace 1 mes</p>
+        </div>
+
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+          <p style="color: var(--text);" class="text-sm font-semibold mb-3">💪 Fuerza Máxima</p>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Press banca</span>
+              <span style="color: var(--text); font-weight: 800;">110kg</span>
+            </div>
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Sentadilla</span>
+              <span style="color: var(--text); font-weight: 800;">150kg</span>
+            </div>
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Peso muerto</span>
+              <span style="color: var(--text); font-weight: 800;">180kg</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-6"></div>
+      </div>
+    </div>
+
+    <!-- Tab: Ejercicios -->
+    <div class="forja-tab" data-tab="ejercicios">
+      <div style="background-color: rgba(11, 11, 15, 0.8); border-bottom-color: var(--border);" class="sticky top-0 z-10 backdrop-blur border-b px-6 py-4 mb-2">
+        <p style="color: rgba(245, 245, 247, 0.5);" class="text-sm">Ejercicios</p>
+        <h1 style="color: var(--text);" class="text-2xl font-extrabold">Catálogo</h1>
+      </div>
+
+      <div class="px-6 py-6 space-y-6">
+        <input type="text" placeholder="Buscar..." style="background-color: var(--surface); border-color: var(--border); color: var(--text);" class="w-full px-4 py-2 rounded-lg border text-sm placeholder:opacity-50" />
+
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+          <p style="color: var(--text);" class="text-sm font-semibold mb-3">💪 Pecho</p>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Press banca</span>
+              <span style="color: var(--lime);" class="text-xs">GIF</span>
+            </div>
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Pecho inclinado</span>
+              <span style="color: var(--lime);" class="text-xs">GIF</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background-color: var(--surface); border-color: var(--border);" class="rounded-2xl border p-4 shadow-lg">
+          <p style="color: var(--text);" class="text-sm font-semibold mb-3">🦵 Piernas</p>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Sentadilla</span>
+              <span style="color: var(--lime);" class="text-xs">GIF</span>
+            </div>
+            <div class="flex justify-between">
+              <span style="color: rgba(245, 245, 247, 0.7);">Leg press</span>
+              <span style="color: var(--lime);" class="text-xs">GIF</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-6"></div>
       </div>
     </div>
   </div>
 
-  <!-- Tab Bar -->
-  <div style="background-color: var(--surface); border-top-color: var(--border);" class="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto border-t flex gap-0 px-6 py-3">
-    <button style="color: var(--lime);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors">Hoy</button>
-    <button style="color: rgba(245, 245, 247, 0.5);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors hover:text-[color:var(--text)]">Entrenar</button>
-    <button style="color: rgba(245, 245, 247, 0.5);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors hover:text-[color:var(--text)]">Progreso</button>
-    <button style="color: rgba(245, 245, 247, 0.5);" class="flex-1 text-center py-2 text-sm font-semibold transition-colors hover:text-[color:var(--text)]">Ejercicios</button>
+  <!-- Tab Bar (Bottom) -->
+  <div style="background-color: var(--surface); border-top-color: var(--border);" class="border-t flex gap-0 px-0 py-0 shrink-0">
+    <button class="tab-btn flex-1 py-3 text-center text-xs font-semibold transition-colors active" data-tab="hoy" style="color: var(--lime); border-top: 2px solid var(--lime);">Hoy</button>
+    <button class="tab-btn flex-1 py-3 text-center text-xs font-semibold transition-colors" data-tab="entrenar" style="color: rgba(245, 245, 247, 0.5); border-top: 2px solid transparent;">Entrenar</button>
+    <button class="tab-btn flex-1 py-3 text-center text-xs font-semibold transition-colors" data-tab="progreso" style="color: rgba(245, 245, 247, 0.5); border-top: 2px solid transparent;">Progreso</button>
+    <button class="tab-btn flex-1 py-3 text-center text-xs font-semibold transition-colors" data-tab="ejercicios" style="color: rgba(245, 245, 247, 0.5); border-top: 2px solid transparent;">Ejercicios</button>
   </div>
 </div>
+
+<script>
+  document.querySelectorAll('.forja-widget').forEach((widget) => {
+    const tabBtns = widget.querySelectorAll('.tab-btn');
+    const tabContents = widget.querySelectorAll('.forja-tab');
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+
+        // Actualizar botones
+        tabBtns.forEach((b) => {
+          b.classList.remove('active');
+          b.style.color = 'rgba(245, 245, 247, 0.5)';
+          b.style.borderTopColor = 'transparent';
+        });
+        btn.classList.add('active');
+        btn.style.color = 'var(--lime)';
+        btn.style.borderTopColor = 'var(--lime)';
+
+        // Actualizar contenido
+        tabContents.forEach((content) => {
+          content.classList.remove('active');
+        });
+        widget.querySelector(`[data-tab="${tabName}"].forja-tab`)?.classList.add('active');
+      });
+    });
+  });
+</script>
