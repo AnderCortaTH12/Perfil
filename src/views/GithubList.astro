@@ -5,6 +5,7 @@ import BoostButton from '../components/BoostButton.astro';
 import TopBoosts from '../components/TopBoosts.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 import { getItems } from '../lib/content';
+import { localizedPath } from '../i18n/utils';
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
@@ -38,18 +39,12 @@ const items = await getItems('github', lang);
                 )}
                 <div class="flex items-start justify-between gap-3">
                   <h3 class="font-serif text-xl leading-snug">
-                    {r.data.repo ? (
-                      <a
-                        href={r.data.repo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="transition hover:text-accent"
-                      >
-                        {r.data.titulo}
-                      </a>
-                    ) : (
-                      r.data.titulo
-                    )}
+                    <a
+                      href={localizedPath(`/github/${r.data.slug}`, lang)}
+                      class="transition hover:text-accent"
+                    >
+                      {r.data.titulo}
+                    </a>
                   </h3>
                   {r.data.destacado && (
                     <span class="shrink-0 rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">

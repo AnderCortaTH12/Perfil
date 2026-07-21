@@ -42,6 +42,12 @@ const github = defineCollection({
     lenguaje: z.string(),
     tags: z.array(z.string()).default([]),
     destacado: z.boolean().default(false),
+    demo: z.string().url().optional(),
+    capturas: z.array(z.object({
+      src: z.string(),
+      alt: z.string(),
+    })).optional(),
+    skills: z.array(z.string()).optional(),
   }),
 });
 

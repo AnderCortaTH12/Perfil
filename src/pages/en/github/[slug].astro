@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import GithubDetail from '../../../views/GithubDetail.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('github', (e) => e.data.idioma === 'en');
+  return items.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<GithubDetail lang="en" entry={entry} />
