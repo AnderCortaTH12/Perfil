@@ -34,9 +34,9 @@ Antes de escribir nada, un validador comprueba que los agregados cuadren interna
 
 El observatorio tiene seis vistas: resumen de KPIs, desglose jerárquico de la demanda (convencional → doméstico-comercial / industrial / cisternas), comparativa interanual, demanda por comunidad autónoma, aprovisionamiento por origen (Argelia, Rusia, GNL...) e infraestructuras (plantas de regasificación, conexiones internacionales). Dos ejemplos con datos reales del último periodo:
 
-![Demanda de gas por sector en GWh: convencional, industrial, sector eléctrico y cisternas](/proyectos/enagas/enagas-demanda-sectores.svg)
+![Demanda de gas por sector en GWh: convencional, industrial, sector eléctrico y cisternas](/Perfil/proyectos/enagas/enagas-demanda-sectores.svg)
 
-![Demanda del sector eléctrico por comunidad autónoma en GWh, encabezada por Andalucía y Cataluña](/proyectos/enagas/enagas-demanda-ccaa.svg)
+![Demanda del sector eléctrico por comunidad autónoma en GWh, encabezada por Andalucía y Cataluña](/Perfil/proyectos/enagas/enagas-demanda-ccaa.svg)
 
 ## Robustez
 

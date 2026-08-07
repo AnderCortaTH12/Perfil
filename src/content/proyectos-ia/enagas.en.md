@@ -34,9 +34,9 @@ Before anything is written, a validator checks that the aggregates match interna
 
 The observatory has six views: KPI summary, hierarchical demand breakdown (conventional → residential-commercial / industrial / tankers), year-over-year comparison, demand by autonomous region, supply origin (Algeria, Russia, LNG...) and infrastructure (regasification plants, international connections). Two examples with real data from the latest period:
 
-![Gas demand by sector in GWh: conventional, industrial, power sector and tankers](/proyectos/enagas/enagas-demanda-sectores.svg)
+![Gas demand by sector in GWh: conventional, industrial, power sector and tankers](/Perfil/proyectos/enagas/enagas-demanda-sectores.svg)
 
-![Power sector demand by Spanish autonomous region in GWh, led by Andalucía and Cataluña](/proyectos/enagas/enagas-demanda-ccaa.svg)
+![Power sector demand by Spanish autonomous region in GWh, led by Andalucía and Cataluña](/Perfil/proyectos/enagas/enagas-demanda-ccaa.svg)
 
 ## Robustness
 
