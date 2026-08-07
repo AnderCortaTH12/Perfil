@@ -1,5 +1,6 @@
 # build output
 dist/
+preview-root/
 # generated types
 .astro/
 
